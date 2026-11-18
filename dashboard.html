@@ -239,7 +239,7 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 <div id="app" class="hide">
  <div id="demo" class="hide noprint" style="background:#fff3cd;color:#664d03;text-align:center;padding:6px;font-size:13px;font-weight:600" data-ar="نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ" data-en="Demo mode with sample data — changes are not saved">نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ</div>
  <div class="top"><div class="logo">MC <b>MEN'S CLUB</b> | <span class="mix"><span class="mix-ar">الموارد البشرية</span><span class="mix-en">Human Resources</span></span><div class="own">EBRAHIM HASSAN <span>· HR ADMINISTRATION</span></div><span id="conn" class="conn">⏳ بنفحص الاتصال...</span></div>
-  <div class="noprint" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" data-tab="dash" data-ar="الداش بورد" data-en="Dashboard">الداش بورد</button><button class="btn" data-tab="list" data-ar="الطلبات" data-en="Applications">الطلبات</button><button class="btn" data-tab="pipe" data-ar="المراحل" data-en="Pipeline">المراحل</button><button class="btn" data-tab="prep" data-ar="فترة الاختيار" data-en="Preparation Period">فترة الاختيار</button><button class="btn" data-tab="set" data-ar="الإعدادات" data-en="Settings">الإعدادات</button></div>
+  <div class="noprint" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" data-tab="dash" data-ar="الداش بورد" data-en="Dashboard">الداش بورد</button><button class="btn" data-tab="list" data-ar="الطلبات" data-en="Applications">الطلبات</button><button class="btn" data-tab="stores" data-ar="STORES" data-en="STORES">STORES</button><button class="btn" data-tab="hq" data-ar="HQ" data-en="HQ">HQ</button><button class="btn" data-tab="wearhouse" data-ar="WEARHOUSE" data-en="WEARHOUSE">WEARHOUSE</button><button class="btn" data-tab="pipe" data-ar="المراحل" data-en="Pipeline">المراحل</button><button class="btn" data-tab="prep" data-ar="فترة الاختيار" data-en="Preparation Period">فترة الاختيار</button><button class="btn" data-tab="set" data-ar="الإعدادات" data-en="Settings">الإعدادات</button></div>
   <div class="noprint" style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn" id="apply" href="https://hemozh15-hash.github.io/mc-hr-form/" target="_blank" rel="noopener" data-ar="📝 استمارة التقديم" data-en="📝 Apply form">📝 استمارة التقديم</a><button class="btn" id="lang">🌐 عربي</button><button class="btn" id="reload" data-ar="تحديث" data-en="Refresh">تحديث</button><button class="btn" id="clrtest" data-ar="🧪 مسح الاختبار" data-en="🧪 Clear test">🧪 مسح الاختبار</button><button class="btn" id="csv" data-ar="تصدير Excel" data-en="Export Excel">تصدير Excel</button><button class="btn r" id="prt" onclick="window.print()" data-ar="طباعة A4" data-en="Print A4">طباعة A4</button></div></div>
  <div class="wrap">
   <div class="pr" id="ptitle"></div>
@@ -400,8 +400,8 @@ const REAL_BR=[
 ["Faysal","A9","Ayman Emad"],
 ["Gnena Mall","A1","Mohamed Sediek"],
 ["Golf City Mall","A1","Mohamed Sediek"],
-["HQ","A1","Mohamed Sediek"],
-["WEARHOUSE","A1","Mohamed Sediek"],
+["HQ","",""],
+["WEARHOUSE","",""],
 ["Hadaeq Al Qubbah","A11","Mostafa Shawky"],
 ["Haram","A9","Ayman Emad"],
 ["Hurghada","A5","Ahmed Haidar"],
@@ -473,7 +473,7 @@ const REAL_BR=[
 ["Zahraa C3 Mall","A1","Mohamed Sediek"],
 ["Zahraa Nasr City","A1","Mohamed Sediek"]
 ];
-const BRV="br-2026-11b";                                 /* إصدار كشف الفروع (HQ + WEARHOUSE) */
+const BRV="br-2026-11c";                                 /* إصدار كشف الفروع (HQ / WEARHOUSE بدون مدير) */
 const OLD_SEED=["زهراء مدينة نصر","عباس العقاد 1","جنينه مول","سيتي ستارز","المعادي","حلوان","هليوبوليس","وسط البلد"];
 let BRM=[];try{BRM=JSON.parse(localStorage.getItem("hrbranches")||"[]")||[]}catch(e){BRM=[]}
 if(!Array.isArray(BRM))BRM=[];
@@ -694,7 +694,16 @@ function range(){let s=0,e=Infinity;
  if(S.from||S.to){if(S.from)s=mid(S.from).getTime();if(S.to)e=mid(S.to).getTime()+864e5-1}
  else if(S.period)s=mid(Date.now()-(S.period-1)*864e5).getTime();
  return[s,e]}
-const base=()=>{const[s,e]=range();return ROWS.filter(r=>(!S.branch||r.branch===S.branch)&&(!S.pos||r.position===S.pos||r._eposition===S.pos)&&(!S.hr||(S.hr==="none"?!r._hr:r._hr===S.hr))&&dOf(r)>=s&&dOf(r)<=e)};
+/* تابات الأرشيف: STORES = فروع ليها مدير منطقة، HQ / WEARHOUSE بالاسم */
+const RETABS=["stores","hq","wearhouse"];
+const RETITLE={stores:"STORES",hq:"HQ",wearhouse:"WEARHOUSE"};
+const scopeRows=()=>{
+ if(S.tab==="stores")return ROWS.filter(r=>{const b=brObj(r.branch);return !!(b&&b.mgr)});
+ if(S.tab==="hq")return ROWS.filter(r=>brKey(r.branch)==="hq");
+ if(S.tab==="wearhouse")return ROWS.filter(r=>brKey(r.branch)==="wearhouse");
+ return ROWS;
+};
+const base=()=>{const[s,e]=range();return scopeRows().filter(r=>(!S.branch||r.branch===S.branch)&&(!S.pos||r.position===S.pos||r._eposition===S.pos)&&(!S.hr||(S.hr==="none"?!r._hr:r._hr===S.hr))&&dOf(r)>=s&&dOf(r)<=e)};
 const listRows=()=>{const q=S.q.trim().toLowerCase();return base().filter(r=>(S.status==="all"||r.Status===S.status)&&(!q||(r.name+r.phone+r.whatsapp).toLowerCase().includes(q)))};
 function periodLabel(){if(S.from||S.to)return T("من ","From ")+(S.from||T("البداية","start"))+T(" إلى "," to ")+(S.to||T("اليوم","today"));return T({1:"اليوم",7:"آخر 7 أيام",30:"آخر 30 يوم",0:"كل الفترات"}[S.period],{1:"Today",7:"Last 7 days",30:"Last 30 days",0:"All time"}[S.period])}
 document.querySelectorAll("[data-p]").forEach(c=>c.onclick=()=>{S.period=+c.dataset.p;S.from=S.to="";draw()});
@@ -740,7 +749,8 @@ function draw(){
  const rows0=base(),q=S.q.trim().toLowerCase(),rr=rows0.filter(r=>!q||(r.name+r.phone+r.whatsapp).toLowerCase().includes(q));
  $("#chips").innerHTML=`${S.hr?`<span class="chip" style="color:${hrColor(S.hr)};border-color:${hrColor(S.hr)}" title="${T("إلغاء فلتر HR","Clear HR filter")}" data-a="${act(()=>{S.hr="";draw()})}">👤 ${esc(S.hr==="none"?T("بدون HR","No HR"):(hrById(S.hr)||{}).name)} ✕</span>`:""}<span class="chip ${S.status==="all"?"on":""}" data-a="${act(()=>{S.status="all";draw()})}">${T("الكل","All")} (${rr.length})</span>`+Object.keys(ST).map(k=>`<span class="chip ${S.status===k?"on":""}" data-a="${act(()=>{S.status=k;draw()})}">${stT(k)} (${rr.filter(r=>r.Status===k).length})</span>`).join("");
  const rows=listRows();
- if(S.tab==="list"){$("#list").classList.remove("hide");
+ if(RETABS.indexOf(S.tab)>=0)$("#ptitle").textContent=RETITLE[S.tab]+" | MC Men's Club"+T(" — أرشيف الطلبات"," — applications archive")+(S.branch?" | "+T("الفرع:","Branch:")+S.branch:"")+(S.pos?" | "+T("الوظيفة:","Position:")+S.pos:"");
+ if(S.tab==="list"||RETABS.indexOf(S.tab)>=0){$("#list").classList.remove("hide");
   $("#list").innerHTML=`<table><tr><th>${T("الاسم","Name")}</th><th>${T("الوظيفة","Position")}</th><th>${T("فرع التقديم","Branch")}</th><th>${T("مدير المنطقة","Area manager")}</th><th>${T("أقرب فرع للمتقدم","Nearest branch")}</th><th>${T("الموبايل","Mobile")}</th><th>${T("التاريخ","Date")}</th><th>${T("الحالة","Status")}</th><th>${T("تعليق HR","HR comment")}</th><th>${T("طباعة","Print")}</th></tr>`+
   (rows.map(r=>{const n=near(r)[0];return `<tr class="row" data-a="${act(()=>openDt(r._row))}"><td><b>${esc(r.name)}</b></td><td>${esc(dv(r,"position"))}</td><td>${esc(r.branch)}</td><td class="mgrcol">${mgrCell(r.branch)}</td><td>${n?esc(n[0])+" · "+esc(n[1])+" "+T("كم","km"):"—"}</td><td dir="ltr" style="text-align:right">${esc(r.phone)}</td><td>${esc((r.submittedAt||"").slice(5,10).replace("-","/"))}</td><td><span class="st ${CL[r.Status]||"n"}">${stT(r.Status)||esc(r.Status)}</span></td><td style="max-width:160px;color:var(--mu);font-size:12px">${r.HRComment?"📝 "+esc(String(r.HRComment).slice(0,40)):""}</td><td><button class="btn" style="padding:4px 10px" data-a="${act(()=>openReport(r))}">${T("🖨️ طباعة","🖨️ Print")}</button>${hrById(r._hr)?`<div style="font-size:11px;font-weight:700;color:${hrColor(r._hr)};margin-top:4px;white-space:nowrap">👤 ${esc(hrById(r._hr).name)}</div>`:""}</td></tr>`}).join("")||`<tr><td colspan="10" style="text-align:center;color:var(--mu);padding:30px">${T("لا توجد طلبات في الفلتر ده.","No applications match this filter.")}</td></tr>`)+"</table>";
  }else{$("#pipe").classList.remove("hide");$("#pvbar").classList.remove("hide");

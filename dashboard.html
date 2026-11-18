@@ -294,7 +294,8 @@ function fitA4(sel){
  el.style.zoom=String(+(h>avail?Math.max(0.32,avail/h*0.98):1).toFixed(3));
  return ()=>{el.style.zoom=old};
 }
-function printA4(sel){
+async function printA4(sel){
+ if(REPORT_ROW){const p=await getPhoto(REPORT_ROW);const ph=$("#rpph");if(p&&ph){const box=ph.parentNode;const im=document.createElement("img");im.src=p;im.alt="";box.textContent="";box.appendChild(im)}}
  const restore=fitA4(sel);
  const back=()=>{restore();window.removeEventListener("afterprint",back)};
  window.addEventListener("afterprint",back);
@@ -340,7 +341,7 @@ function dv(r,k){const en=(r["_e"+k]!==undefined)?r["_e"+k]:r[k];const ar=(MAPS[
 function mapLabel(k,en){return T((MAPS[k]&&MAPS[k][en])||en,en)}
 const YEAR_EN={"1":"1st year","2":"2nd year","3":"3rd year","4":"4th year","5+":"5th year+"};
 function yearDisp(r){return T(MAPS.year[r.year]||r.year,YEAR_EN[r.year]||r.year)}
-let KEY="",ROWS=[],TPL=[],ACT=[],REP=[],waSel="Rejected",BRANCHES=[],ALL_BRANCHES=[],POSITIONS=[],OPEN_ROW=null;
+let KEY="",ROWS=[],TPL=[],ACT=[],REP=[],waSel="Rejected",BRANCHES=[],ALL_BRANCHES=[],POSITIONS=[],OPEN_ROW=null,REPORT_ROW=null;
 const S={tab:"dash",period:30,from:"",to:"",basis:"sub",branch:"",pos:"",q:"",status:"all",hr:""};
 if(DEMO)S.period=0; /* الديمو تبدأ على "الكل" عشان تظهر كل البيانات */
 try{KEY=(typeof HKEY!=="undefined"&&HKEY)?HKEY:(sessionStorage.getItem("hrkey")||"")}catch(e){KEY=(typeof HKEY!=="undefined"&&HKEY)||""}
@@ -1186,7 +1187,7 @@ function buildReport(r){
  ${sec}<div class="decl"><h4>📋 الإقرار / DECLARATION</h4><p>أقر بأن جميع البيانات الواردة أعلاه صحيحة، وأوافق على استخدامها من قبل MC Men's Club لأغراض التوظيف والتواصل معي بشأن طلبي.</p></div>
  <div class="sigs"><div><span>✍️ توقيع المتقدم / Applicant signature</span><i></i></div><div><span>✅ تم المراجعة بواسطة / Reviewed by</span>${hr?`<b style="font-size:12.5px;font-weight:800;color:${hrColor(hr.id)}">${esc(hr.name)}</b>`:""}<i></i></div></div>
  <div class="hrbox"><div class="hrbox-h">للاستخدام الداخلي — الموارد البشرية / FOR HR USE ONLY${hr?" — "+esc(hr.name):""}</div><div class="hrbox-g"><div><span>تاريخ المقابلة / Interview date</span><i></i></div><div><span>النتيجة / Result</span><p>${esc(ST[r.Status]||r.Status)}</p></div><div><span>ملاحظات / Remarks (HR comment)</span>${r.HRComment?`<p>${esc(r.HRComment)}</p>`:"<i></i>"}</div><div><span>التوقيع / Signature</span>${hr?`<p style="color:${hrColor(hr.id)}">${esc(hr.name)}</p>`:"<i></i>"}</div></div></div></div>`}
-async function openReport(r){$("#rpb").innerHTML=buildReport(r);$("#rp").classList.remove("hide");document.body.classList.add("pr-rp");
+async function openReport(r){REPORT_ROW=r;$("#rpb").innerHTML=buildReport(r);$("#rp").classList.remove("hide");document.body.classList.add("pr-rp");
  const ph=$("#rpph");if(ph)ph.textContent=T("⏳ جاري تحميل الصورة...","⏳ Loading photo...");
  const p=await getPhoto(r);
  if(p&&$("#rpph")){const box=$("#rpph").parentNode;const im=document.createElement("img");im.src=p;im.alt="";box.textContent="";box.appendChild(im)}

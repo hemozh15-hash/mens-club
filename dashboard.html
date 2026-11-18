@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;font-family:Cairo,sans-serif;background:var(--bg);color:var(--ink)}
 .top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:0 24px;background:#fff;border-bottom:3px solid var(--red)}
 .brandwrap{display:flex;align-items:center;gap:10px;min-width:0}
-.toplogo{width:auto;height:52px;object-fit:contain;flex:none;display:block}
+.toplogo{width:auto;height:52px;object-fit:contain;flex:none;display:block;border:3px solid #000;padding:2px;background:#fff}
 .logo{font-weight:800;font-size:20px}.logo b{color:var(--red)}
 .own{font-size:11.5px;font-weight:800;color:#1565c0;margin-top:3px;letter-spacing:.4px}
 .own span{color:var(--mu);font-weight:700;letter-spacing:.2px}
@@ -53,7 +53,7 @@ td{padding:11px 14px;border-bottom:1px solid #eee}tr.row{cursor:pointer}tr.row:h
 .tlx{display:flex;gap:3px;font-size:10px;color:var(--mu);margin-top:3px}.tlx span{flex:1;text-align:center;overflow:hidden}
 .al{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;font-size:13px;cursor:pointer}.al i{font-style:normal;color:var(--red);font-weight:700}
 .seg{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:6px 0}.seg u{display:block}
-#login{max-width:420px;margin:60px auto;padding:28px;text-align:center}#login input{width:100%;margin:12px 0}#login .toplogo{width:auto;height:80px;max-width:100%;margin:0 auto 12px}
+#login{max-width:420px;margin:60px auto;padding:28px;text-align:center}#login input{width:100%;margin:12px 0}#login .toplogo{width:auto;height:80px;max-width:100%;margin:0 auto 12px;border:0;padding:0;background:none}
 #dt{position:fixed;top:0;bottom:0;left:0;width:min(520px,100%);background:#fff;border-right:1px solid var(--line);box-shadow:0 0 30px rgba(0,0,0,.18);overflow:auto;padding:20px;transform:translateX(-105%);transition:.2s;z-index:5}#dt.on{transform:none}
 h3{margin:16px 0 6px;font-size:15px;color:var(--red)}.kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #eee;font-size:14px}.kv span{color:var(--mu)}.kv b{font-weight:600;text-align:left;word-break:break-word}
 .nb{display:flex;align-items:center;gap:8px;font-size:13px;margin:5px 0}.nb i{flex:1;height:7px;background:#eee;border-radius:4px}.nb u{display:block;height:7px;background:var(--red);border-radius:4px}
@@ -252,7 +252,7 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 </style>
 </head>
 <body>
-<div id="login" class="card"><img class="toplogo" id="loginLogo" alt="MC Men's Club"><div class="logo">MC <b>MEN'S CLUB</b></div><p class="mix"><span class="mix-ar">لوحة الموارد البشرية</span><span class="mix-en">Human Resources Dashboard</span></p><input id="key" type="password" data-ar-ph="مفتاح الدخول" data-en-ph="Access key" placeholder="مفتاح الدخول"><button class="btn r" id="go" style="width:100%" data-ar="دخول" data-en="Login">دخول</button><button class="btn" id="lang2" style="width:100%;margin-top:8px">🌐 عربي</button><div id="msg"></div></div>
+<div id="login" class="card"><img class="toplogo" id="loginLogo" alt="MC Men's Club"><div class="logo">MC <b>MEN'S CLUB</b></div><p class="mix"><span class="mix-ar">لوحة الموارد البشرية</span><span class="mix-en">Human Resources Dashboard</span></p><input id="key" type="password" data-ar-ph="كلمة المرور" data-en-ph="Password" placeholder="كلمة المرور"><button class="btn r" id="go" style="width:100%" data-ar="دخول" data-en="Login">دخول</button><button class="btn" id="lang2" style="width:100%;margin-top:8px">🌐 عربي</button><div id="msg"></div></div>
 
 <div id="app" class="hide">
  <div id="demo" class="hide noprint" style="background:#fff3cd;color:#664d03;text-align:center;padding:6px;font-size:13px;font-weight:600" data-ar="نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ" data-en="Demo mode with sample data — changes are not saved">نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ</div>
@@ -286,7 +286,7 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 <div id="dt"></div>
 <div id="rp" class="hide"><div class="rp-bar"><button class="btn r" onclick="printA4('#rpb')" data-ar="🖨️ طباعة / حفظ PDF" data-en="🖨️ Print / Save PDF">🖨️ طباعة / حفظ PDF</button><button class="btn" id="rpx" data-ar="إغلاق" data-en="Close">إغلاق</button></div><div id="rpb"></div></div>
 
-<script>var HKEY="MC-HR-2026";</script>
+<!-- مفيش مفتاح مدمج في الصفحة — الدخول بكلمة سر بيتبعت للسيرفر -->
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyLRoqo4FuOKSEjKQAXsSgI8EoGipQDdgKPhRvuNmr9_dON1cSKQi76x9d_raRs9vV7bw/exec";
 const ORDER=["New","Under review","Test Floor","Accepted","Preparing docs","Hired"];
@@ -363,7 +363,7 @@ function yearDisp(r){return T(MAPS.year[r.year]||r.year,YEAR_EN[r.year]||r.year)
 let KEY="",ROWS=[],TPL=[],ACT=[],REP=[],waSel="Rejected",BRANCHES=[],ALL_BRANCHES=[],POSITIONS=[],OPEN_ROW=null,REPORT_ROW=null;
 const S={tab:"dash",period:30,from:"",to:"",basis:"sub",branch:"",pos:"",q:"",status:"all",hr:""};
 if(DEMO)S.period=0; /* الديمو تبدأ على "الكل" عشان تظهر كل البيانات */
-try{KEY=(typeof HKEY!=="undefined"&&HKEY)?HKEY:(sessionStorage.getItem("hrkey")||"")}catch(e){KEY=(typeof HKEY!=="undefined"&&HKEY)||""}
+try{KEY=sessionStorage.getItem("hrkey")||""}catch(e){KEY=""}
 
 /* ---------- HR المسؤول: الاختيار + كلمة المرور ---------- */
 const HRS=[{id:"basma",name:"BASMA HIKAL",pass:"2027"},{id:"ebrahim",name:"EBRAHIM HASSAN",pass:"2026"}];
@@ -532,7 +532,7 @@ const mgrColor=n=>{const b=brObj(n);if(!b||!b.mgr)return "var(--mu)";
  return MGRC[b.mgr]||"var(--ink)"};
 /* الإعدادات مفتوحة في الجلسة الحالية فقط */
 let SETOK="";try{SETOK=sessionStorage.getItem("hrsetok")||""}catch(e){SETOK=""}
-if(!hrById(SETOK))SETOK="";
+if(SETOK!=="ebrahim")SETOK=""; /* الإعدادات لإبراهيم حسن بس */
 function setLock(v){SETOK=hrById(v)?v:"";try{SETOK?sessionStorage.setItem("hrsetok",SETOK):sessionStorage.removeItem("hrsetok")}catch(e){}}
 /* وضع عرض المراحل: board | timeline | matrix */
 try{S.pview=localStorage.getItem("hrpv")||"board"}catch(e){S.pview="board"}
@@ -628,7 +628,7 @@ function inboxRows(){
 
 /* ---------- الاتصال ---------- */
 async function api(q){if(DEMO)return{ok:true,rows:[],templates:DEMO_TPL};
- const k=(typeof HKEY!=="undefined"&&HKEY)?String(HKEY):KEY; /* المفتاح المدمج دايمًا — مفيش كتب يدوي */
+ const k=String(KEY||"").trim(); /* الكلمة اللي المستخدم كتبها — مفيش مفتاح مدمج */
  if(typeof google!=="undefined"&&google.script&&google.script.run){
   return await new Promise((resolve,reject)=>{
    try{google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error((e&&e.message)||String(e)))).apiCall(Object.assign({key:k},q))}
@@ -647,7 +647,7 @@ function connBadge(ok){
 const idOf=r=>({ref:r.ref||"",row:r._row});
 async function load(){
  let d;try{d=await api({})}catch(e){$("#msg").textContent=T("تعذر الاتصال بالسيرفر.","Could not reach the server.");connBadge(false);return false}
- if(!d.ok){$("#msg").textContent=T("مفتاح الدخول غير صحيح.","Incorrect access key.");connBadge(false);return false}
+ if(!d.ok){$("#msg").textContent=T("كلمة المرور غير صحيحة.","Incorrect password.");try{sessionStorage.removeItem("hrkey")}catch(e){}KEY="";connBadge(false);return false}
  ROWS=(DEMO?inboxRows().concat(demoRows()):d.rows.slice().reverse()).map(norm);TPL=(d.templates||[]).map(t=>t.status==="Interview"?Object.assign({},t,{status:"Test Floor"}):t);applyHR();
   /* إعادة حساب «أقرب الفروع» من الإحداثيات الحقيقية — ومسح أي أرقام وهمية قديمة */
   ROWS.forEach(r=>{if(hasGeo(r))applyNear(r,r.branch);else for(let i=1;i<=5;i++){delete r["Nearest "+i];delete r["Distance "+i+" (km)"]}});
@@ -959,13 +959,13 @@ function drawSet(){
   el.innerHTML=`<div class="card pad setlock">
    <div style="font-size:34px;line-height:1">🔒</div>
    <h3 class="t" style="margin:8px 0 4px">${T("الإعدادات محمية","Settings are locked")}</h3>
-   <p>${T("اكتب كلمة مرور HR المسؤول عشان تقدر تضيف أو تعدّل أو توقف الفروع.","Enter a responsible HR password to add, rename or deactivate branches.")}</p>
+   <p>${T("الإعدادات لإبراهيم حسن بس — اكتب كلمة المرور بتاعته عشان تفتحها.","Settings are for EBRAHIM HASSAN only — enter his password to unlock.")}</p>
    <input id="setpw" type="password" autocomplete="off" placeholder="${T("كلمة المرور","Password")}">
    <div class="hint" id="setmsg"></div>
    <button class="btn r" id="setgo" style="width:100%">🔓 ${T("فتح الإعدادات","Unlock settings")}</button></div>`;
-  const go=()=>{const h=HRS.find(x=>x.pass===($("#setpw").value||"").trim());
-   if(!h){$("#setmsg").textContent=T("كلمة المرور غير صحيحة","Incorrect password");$("#setpw").focus();return}
-   setLock(h.id);draw()};
+  const go=()=>{const v=($("#setpw").value||"").trim();
+   if(v!=="1994"){$("#setmsg").textContent=T("كلمة المرور غير صحيحة","Incorrect password");$("#setpw").focus();return}
+   setLock("ebrahim");draw()};
   $("#setgo").onclick=go;
   $("#setpw").onkeydown=e=>{if(e.key==="Enter")go()};
   return;

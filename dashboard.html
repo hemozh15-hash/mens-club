@@ -1115,6 +1115,7 @@ function openDt(row){
  $("#bs").onchange=e=>setBranch(r,e.target.value);
  $("#ss").onchange=e=>setStatus(r,e.target.value);
  $("#rb").onclick=()=>openReport(r);
+ getPhoto(r).then(p=>{if(p&&OPEN_ROW===row){const av=$("#av");if(av){av.textContent="";const im=document.createElement("img");im.src=p;im.alt="";im.style.cssText="width:100%;height:100%;object-fit:cover";av.appendChild(im)}}}).catch(()=>{});
  $$("#rejbox .rejchip").forEach(c=>c.onclick=()=>{const hc=$("#hc");hc.value=c.dataset.r;$$("#rejbox .rejchip").forEach(x=>x.classList.toggle("on",x===c));hc.focus()});
  document.querySelectorAll("[data-w]").forEach(c=>c.onclick=()=>{waSel=c.dataset.w;document.querySelectorAll("[data-w]").forEach(x=>x.classList.toggle("on",x===c));$("#wt").value=waText(r,waSel);wdUpd()});
  wdUpd();$("#wd").oninput=()=>{$("#wt").value=waText(r,waSel)};
@@ -1186,7 +1187,10 @@ function buildReport(r){
  <div class="sigs"><div><span>✍️ توقيع المتقدم / Applicant signature</span><i></i></div><div><span>✅ تم المراجعة بواسطة / Reviewed by</span>${hr?`<b style="font-size:12.5px;font-weight:800;color:${hrColor(hr.id)}">${esc(hr.name)}</b>`:""}<i></i></div></div>
  <div class="hrbox"><div class="hrbox-h">للاستخدام الداخلي — الموارد البشرية / FOR HR USE ONLY${hr?" — "+esc(hr.name):""}</div><div class="hrbox-g"><div><span>تاريخ المقابلة / Interview date</span><i></i></div><div><span>النتيجة / Result</span><p>${esc(ST[r.Status]||r.Status)}</p></div><div><span>ملاحظات / Remarks (HR comment)</span>${r.HRComment?`<p>${esc(r.HRComment)}</p>`:"<i></i>"}</div><div><span>التوقيع / Signature</span>${hr?`<p style="color:${hrColor(hr.id)}">${esc(hr.name)}</p>`:"<i></i>"}</div></div></div></div>`}
 async function openReport(r){$("#rpb").innerHTML=buildReport(r);$("#rp").classList.remove("hide");document.body.classList.add("pr-rp");
- const p=await getPhoto(r);if(p&&$("#rpph")){const box=$("#rpph").parentNode;const im=document.createElement("img");im.src=p;im.alt="";box.textContent="";box.appendChild(im)}}
+ const ph=$("#rpph");if(ph)ph.textContent=T("⏳ جاري تحميل الصورة...","⏳ Loading photo...");
+ const p=await getPhoto(r);
+ if(p&&$("#rpph")){const box=$("#rpph").parentNode;const im=document.createElement("img");im.src=p;im.alt="";box.textContent="";box.appendChild(im)}
+ else if($("#rpph"))$("#rpph").textContent=T("📷 صورة شخصية / Photo","📷 Photo")}
 $("#rpx").onclick=()=>{$("#rp").classList.add("hide");document.body.classList.remove("pr-rp")};
 
 /* ---------- تصدير Excel (في كل التابات) ---------- */

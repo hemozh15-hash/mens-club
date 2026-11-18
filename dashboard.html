@@ -665,10 +665,23 @@ function enter(){$("#login").classList.add("hide");$("#app").classList.remove("h
 $("#go").onclick=async()=>{KEY=$("#key").value.trim();if(await load()){try{sessionStorage.setItem("hrkey",KEY)}catch(e){}enter()}};
 if(DEMO){KEY="demo";load().then(enter)}else if(KEY){load().then(ok=>{if(ok)enter()})}
 /* تحديث لايف: أول ما طلب جديد يتسجل من الاستمارة يظهر في الطلبات */
-function inboxReload(){if(!DEMO)return;
- load().then(ok=>{if(!ok)return;const app=$("#app");if(app&&!app.classList.contains("hide"))draw()})}
+let _lastCount=-1,_pollStarted=false;
+async function pollTick(){
+ try{
+  const d=await api({});
+  const n=(d&&d.ok&&d.rows)?d.rows.length:null;
+  if(n!=null&&_lastCount>=0&&n!==_lastCount){_lastCount=n;await load();const app=$("#app");if(app&&!app.classList.contains("hide"))draw()}
+  else if(n!=null&&_lastCount<0){_lastCount=n}
+ }catch(e){}
+}
+function inboxReload(){
+ if(DEMO){load().then(ok=>{if(!ok)return;const app=$("#app");if(app&&!app.classList.contains("hide"))draw()});return}
+ /* على GitHub: نفحص الشيت كل 8 ثواني، ولو عدد الطلبات زاد نحدّث الجدول */
+ if(!_pollStarted){_pollStarted=true;setInterval(pollTick,8000)}
+}
 window.addEventListener("storage",e=>{if(e.key===INBOX_KEY)inboxReload()});
 try{const ibc=new BroadcastChannel("hr_inbox");ibc.onmessage=()=>inboxReload()}catch(e){}
+if(!DEMO)inboxReload();
 
 /* ---------- الفلاتر المشتركة ---------- */
 const dOf=r=>new Date(S.basis==="status"?(r.StatusChangedAt||r.submittedAt):r.submittedAt).getTime();
@@ -1100,6 +1113,7 @@ function openDt(row){
  <div class="wa"><h3>${T("رسالة واتساب","WhatsApp message")}</h3><div style="display:flex;gap:6px;flex-wrap:wrap">${WA.map(k=>`<span class="chip ${k===waSel?"on":""}" data-w="${k}">${wlT(k)}</span>`).join("")}</div><div id="wdw" class="hide" style="margin-top:8px"><span id="wdl"></span> <input type="date" id="wd"></div><textarea id="wt">${esc(waText(r,waSel))}</textarea><button class="btn r" id="ws" style="width:100%;margin-top:8px">${T("فتح واتساب وتحديث الحالة","Open WhatsApp & update status")}</button></div>`;
  $("#dt").classList.add("on");$("#cl").onclick=()=>$("#dt").classList.remove("on");
  $("#bs").onchange=e=>setBranch(r,e.target.value);
+ $("#ss").onchange=e=>setStatus(r,e.target.value);
  $$("#rejbox .rejchip").forEach(c=>c.onclick=()=>{const hc=$("#hc");hc.value=c.dataset.r;$$("#rejbox .rejchip").forEach(x=>x.classList.toggle("on",x===c));hc.focus()});
  document.querySelectorAll("[data-w]").forEach(c=>c.onclick=()=>{waSel=c.dataset.w;document.querySelectorAll("[data-w]").forEach(x=>x.classList.toggle("on",x===c));$("#wt").value=waText(r,waSel);wdUpd()});
  wdUpd();$("#wd").oninput=()=>{$("#wt").value=waText(r,waSel)};
@@ -1116,7 +1130,10 @@ function openDt(row){
  $("#ws").onclick=()=>{window.open(waLink(r,$("#wt").value),"_blank");setStatus(r,waSel);$("#ss").value=waSel};
 }
 async function setStatus(r,s){const oS=r.Status,oT=r.StatusChangedAt;r.Status=s;r.StatusChangedAt=new Date().toISOString();draw();
- try{const x=await api(Object.assign({action:"status",status:s},idOf(r)));if(!x||x.ok===false)throw 0}
+ try{const x=await api(Object.assign({action:"status",status:s},idOf(r)));if(!x||x.ok===false)throw 0;
+  /* لو تم التعيين → افتح تاب فترة الاختيار على طول */
+  if(s==="Hired"){$("#dt").classList.remove("on");S.branch="";S.pos="";S.hr="";S.q="";S.status="all";S.tab="prep";draw()}
+ }
  catch(e){r.Status=oS;r.StatusChangedAt=oT;draw();const ss=$("#ss");if(ss)ss.value=oS;alert(T("تعذر حفظ الحالة، حدّث الصفحة وحاول تاني.","Could not save status. Refresh and try again."))}}
 
 

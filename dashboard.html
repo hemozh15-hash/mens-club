@@ -607,13 +607,14 @@ function inboxRows(){
 
 /* ---------- الاتصال ---------- */
 async function api(q){if(DEMO)return{ok:true,rows:[],templates:DEMO_TPL};
+ const k=(typeof HKEY!=="undefined"&&HKEY)?String(HKEY):KEY; /* المفتاح المدمج دايمًا — مفيش كتب يدوي */
  if(typeof google!=="undefined"&&google.script&&google.script.run){
   return await new Promise((resolve,reject)=>{
-   try{google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error((e&&e.message)||String(e)))).apiCall(Object.assign({key:KEY},q))}
+   try{google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error((e&&e.message)||String(e)))).apiCall(Object.assign({key:k},q))}
    catch(e){reject(e)}
   });
  }
- const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({key:KEY},q))});
+ const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({key:k},q))});
  if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}
 function connBadge(ok){
  const el=$("#conn");if(!el)return;

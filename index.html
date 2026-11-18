@@ -510,7 +510,7 @@ async function pingLink(){
   return await new Promise(res=>{try{google.script.run.withSuccessHandler(r=>res(r||null)).withFailureHandler(()=>res(null)).ping()}catch(e){res(null)}});
  }
  if(/^https:\/\/script\.google/.test(SCRIPT_URL)){
-  try{const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"ping"})});if(!r.ok)return null;return await r.json()}catch(e){return null}
+  try{const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"ping"})});if(!r.ok)return null;await r.text();return {ok:true}}catch(e){return null}
  }
  return null;
 }

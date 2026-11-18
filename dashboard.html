@@ -400,6 +400,8 @@ const REAL_BR=[
 ["Faysal","A9","Ayman Emad"],
 ["Gnena Mall","A1","Mohamed Sediek"],
 ["Golf City Mall","A1","Mohamed Sediek"],
+["HQ","A1","Mohamed Sediek"],
+["WEARHOUSE","A1","Mohamed Sediek"],
 ["Hadaeq Al Qubbah","A11","Mostafa Shawky"],
 ["Haram","A9","Ayman Emad"],
 ["Hurghada","A5","Ahmed Haidar"],
@@ -471,7 +473,7 @@ const REAL_BR=[
 ["Zahraa C3 Mall","A1","Mohamed Sediek"],
 ["Zahraa Nasr City","A1","Mohamed Sediek"]
 ];
-const BRV="br-2026-11";                                  /* إصدار كشف الفروع */
+const BRV="br-2026-11b";                                 /* إصدار كشف الفروع (HQ + WEARHOUSE) */
 const OLD_SEED=["زهراء مدينة نصر","عباس العقاد 1","جنينه مول","سيتي ستارز","المعادي","حلوان","هليوبوليس","وسط البلد"];
 let BRM=[];try{BRM=JSON.parse(localStorage.getItem("hrbranches")||"[]")||[]}catch(e){BRM=[]}
 if(!Array.isArray(BRM))BRM=[];

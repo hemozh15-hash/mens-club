@@ -216,9 +216,9 @@ body.submitted .wrap{max-width:800px}
  <label >💼 الوظيفة المستهدفة <i>/ Position</i></label>
  <select name="position" required>
   <option value="" data-ar="اختر الوظيفة" data-en="Select a position"></option>
-  <option value="Sales" data-ar="سيلز" data-en="Sales"></option>
-  <option value="Deputy Manager" data-ar="نائب مدير" data-en="Deputy Manager"></option>
-  <option value="Manager" data-ar="مدير" data-en="Manager"></option>
+  <option value="Sales" data-ar="Sales" data-en="Sales"></option>
+  <option value="Deputy Manager" data-ar="Deputy Manager" data-en="Deputy Manager"></option>
+  <option value="Manager" data-ar="Manager" data-en="Manager"></option>
  </select>
  <label >👤 الاسم الكامل (رباعي) <i>/ Full name (four names)</i></label>
  <input name="name" required minlength="8" autocomplete="name">
@@ -389,13 +389,15 @@ setLang("ar");
 /* الفرع والوظيفة من الرابط أو الـ QR: ?branch=Maadi&pos=Sales */
 /* ===== Ø£Ù‚Ø±Ø¨ ÙØ±Ø¹ Ù„Ù„Ù…ØªÙ‚Ø¯Ù… Ù…Ù† Ø¥Ø­Ø¯Ø§Ø«ÙŠØ§ØªÙ‡ (Ø®Ø±Ø§Ø¦Ø· Ø¬ÙˆØ¬Ù„) ===== */
 
-const BRANCH_GOV=[["{Tanta}","الغربية","Gharbia"],["10Th Of Ramadan","الشرقية","Sharqia"],["Abbas El Akkad 1","القاهرة","Cairo"],["Abbas El Akkad 2","القاهرة","Cairo"],["Abo Kbeer","الدقهلية","Dakahlia"],["Aboul Matameer","البحيرة","Beheira"],["Ain Shams","القاهرة","Cairo"],["Al Agamy","الإسكندرية","Alexandria"],["Al Wasta","بني سويف","Beni Suef"],["Alexander","الإسكندرية","Alexandria"],["Ashmoon","القليوبية","Qalyubia"],["Aswan","أسوان","Aswan"],["Asyut 1","أسيوط","Asyut"],["Asyut 2","أسيوط","Asyut"],["Bagour","القليوبية","Qalyubia"],["Banha","القليوبية","Qalyubia"],["Bani Mazar","المنيا","Minya"],["Bani Suef 1","بني سويف","Beni Suef"],["Bani Suif 2","بني سويف","Beni Suef"],["Belqas","الدقهلية","Dakahlia"],["Carrefour","القاهرة","Cairo"],["City Mall Shubra","القاهرة","Cairo"],["Club5","القاهرة","Cairo"],["Damanhur 1","البحيرة","Beheira"],["Damanhur 2","البحيرة","Beheira"],["Damietta","دمياط","Damietta"],["Damietta Sq","دمياط","Damietta"],["Dekernes","الدقهلية","Dakahlia"],["Desouk 2","البحيرة","Beheira"],["Diarb Negm","الشرقية","Sharqia"],["Dokki","الجيزة","Giza"],["Fayoum 1","الفيوم","Fayoum"],["Fayoum 2","الفيوم","Fayoum"],["Faysal","الجيزة","Giza"],["Gnena Mall","القاهرة","Cairo"],["Hadaeq Al Qubbah","القاهرة","Cairo"],["Haram","الجيزة","Giza"],["Hurghada","البحر الأحمر","Red Sea"],["Ismaelia 2","الإسماعيلية","Ismailia"],["Itay Al Barud","البحيرة","Beheira"],["Kafr El Dawar","الإسكندرية","Alexandria"],["Kafr El Sheikh","كفر الشيخ","Kafr El Sheikh"],["Kafr El Sheikh 2","كفر الشيخ","Kafr El Sheikh"],["Kafr El Zayat","الغربية","Gharbia"],["Komombo","أسوان","Aswan"],["Luxor 1","الأقصر","Luxor"],["Luxor 2","الأقصر","Luxor"],["Maadi","الجيزة","Giza"],["Madinaty","القاهرة","Cairo"],["Maghagha","بني سويف","Beni Suef"],["Mahalla","الدقهلية","Dakahlia"],["Malawy","بني سويف","Beni Suef"],["Mall Of Arabia","الجيزة","Giza"],["Mall Of Egypt","الجيزة","Giza"],["Mansoura 1","الدقهلية","Dakahlia"],["Mansoura 2","الدقهلية","Dakahlia"],["Mansoura 3","الدقهلية","Dakahlia"],["Mansoura 4","الدقهلية","Dakahlia"],["Mataria","القاهرة","Cairo"],["Meet Ghamr","الغربية","Gharbia"],["Menia 2","المنيا","Minya"],["Menia El Kamh","الشرقية","Sharqia"],["Menia Etab","المنيا","Minya"],["Menouf 2","المنوفية","Menoufia"],["Miami","القاهرة","Cairo"],["Mohandseen","القاهرة","Cairo"],["Mokattam","القاهرة","Cairo"],["Nagaa Hammadi","قنا","Qena"],["New Damietta","دمياط","Damietta"],["October","الجيزة","Giza"],["October Outlet","الجيزة","Giza"],["Port Said 1","بورسعيد","Port Said"],["Qalyub","القاهرة","Cairo"],["Qena 2","قنا","Qena"],["Quesna","القليوبية","Qalyubia"],["Rashid","البحيرة","Beheira"],["Roxy","القاهرة","Cairo"],["Sadat","المنوفية","Menoufia"],["Safia Zaghlol","الإسكندرية","Alexandria"],["Sharm El Sheikh","جنوب سيناء","South Sinai"],["Shebeen El Koom 2","المنوفية","Menoufia"],["Shebeen El Koom 3","المنوفية","Menoufia"],["Shebeen El Qanater 2","القليوبية","Qalyubia"],["Sherbeen","الدقهلية","Dakahlia"],["Shubra El Khema 2","القاهرة","Cairo"],["Shubra El Khema 3","القاهرة","Cairo"],["Shubra Street 1","القاهرة","Cairo"],["Shubra Street 2","القاهرة","Cairo"],["Sohag 1","سوهاج","Sohag"],["Sohag 2","سوهاج","Sohag"],["Stock","الجيزة","Giza"],["Suez","السويس","Suez"],["Talaat Harb","الغربية","Gharbia"],["Tanta Mall 2","الغربية","Gharbia"],["Zagazig 1","الشرقية","Sharqia"],["Zagazig 2","الشرقية","Sharqia"],["Zagazig 3","الشرقية","Sharqia"],["Zahraa Nasr City","القاهرة","Cairo"],["Arabella Plaza Mall","القاهرة","Cairo"],["Bani Mazar 2","المنيا","Minya"],["Elsheikh Zayed","الجيزة","Giza"],["Golf City Mall","القاهرة","Cairo"],["Maxim Mall","القاهرة","Cairo"],["New Maadi","القاهرة","Cairo"],["New Mohandseen","الجيزة","Giza"],["New Mokattam","القاهرة","Cairo"],["Shebein Space Mall","المنوفية","Menoufia"],["Tanta","الغربية","Gharbia"],["Zahraa C3 Mall","القاهرة","Cairo"]];
+const BRANCH_GOV=[["{Tanta}","الغربية","Gharbia"],["10Th Of Ramadan","الشرقية","Sharqia"],["Abbas El Akkad 1","القاهرة","Cairo"],["Abbas El Akkad 2","القاهرة","Cairo"],["Abo Kbeer","الدقهلية","Dakahlia"],["Aboul Matameer","البحيرة","Beheira"],["Ain Shams","القاهرة","Cairo"],["Al Agamy","الإسكندرية","Alexandria"],["Al Wasta","بني سويف","Beni Suef"],["Alexander","الإسكندرية","Alexandria"],["Ashmoon","القليوبية","Qalyubia"],["Aswan","أسوان","Aswan"],["Asyut 1","أسيوط","Asyut"],["Asyut 2","أسيوط","Asyut"],["Bagour","القليوبية","Qalyubia"],["Banha","القليوبية","Qalyubia"],["Bani Mazar","المنيا","Minya"],["Bani Suef 1","بني سويف","Beni Suef"],["Bani Suif 2","بني سويف","Beni Suef"],["Belqas","الدقهلية","Dakahlia"],["Carrefour","القاهرة","Cairo"],["City Mall Shubra","القاهرة","Cairo"],["Club5","القاهرة","Cairo"],["Damanhur 1","البحيرة","Beheira"],["Damanhur 2","البحيرة","Beheira"],["Damietta","دمياط","Damietta"],["Damietta Sq","دمياط","Damietta"],["Dekernes","الدقهلية","Dakahlia"],["Desouk 2","البحيرة","Beheira"],["Diarb Negm","الشرقية","Sharqia"],["Dokki","الجيزة","Giza"],["Fayoum 1","الفيوم","Fayoum"],["Fayoum 2","الفيوم","Fayoum"],["Faysal","الجيزة","Giza"],["Gnena Mall","القاهرة","Cairo"],["Hadaeq Al Qubbah","القاهرة","Cairo"],["HQ","القاهرة","Cairo"],["WEARHOUSE","القاهرة","Cairo"],["Haram","الجيزة","Giza"],["Hurghada","البحر الأحمر","Red Sea"],["Ismaelia 2","الإسماعيلية","Ismailia"],["Itay Al Barud","البحيرة","Beheira"],["Kafr El Dawar","الإسكندرية","Alexandria"],["Kafr El Sheikh","كفر الشيخ","Kafr El Sheikh"],["Kafr El Sheikh 2","كفر الشيخ","Kafr El Sheikh"],["Kafr El Zayat","الغربية","Gharbia"],["Komombo","أسوان","Aswan"],["Luxor 1","الأقصر","Luxor"],["Luxor 2","الأقصر","Luxor"],["Maadi","الجيزة","Giza"],["Madinaty","القاهرة","Cairo"],["Maghagha","بني سويف","Beni Suef"],["Mahalla","الدقهلية","Dakahlia"],["Malawy","بني سويف","Beni Suef"],["Mall Of Arabia","الجيزة","Giza"],["Mall Of Egypt","الجيزة","Giza"],["Mansoura 1","الدقهلية","Dakahlia"],["Mansoura 2","الدقهلية","Dakahlia"],["Mansoura 3","الدقهلية","Dakahlia"],["Mansoura 4","الدقهلية","Dakahlia"],["Mataria","القاهرة","Cairo"],["Meet Ghamr","الغربية","Gharbia"],["Menia 2","المنيا","Minya"],["Menia El Kamh","الشرقية","Sharqia"],["Menia Etab","المنيا","Minya"],["Menouf 2","المنوفية","Menoufia"],["Miami","القاهرة","Cairo"],["Mohandseen","القاهرة","Cairo"],["Mokattam","القاهرة","Cairo"],["Nagaa Hammadi","قنا","Qena"],["New Damietta","دمياط","Damietta"],["October","الجيزة","Giza"],["October Outlet","الجيزة","Giza"],["Port Said 1","بورسعيد","Port Said"],["Qalyub","القاهرة","Cairo"],["Qena 2","قنا","Qena"],["Quesna","القليوبية","Qalyubia"],["Rashid","البحيرة","Beheira"],["Roxy","القاهرة","Cairo"],["Sadat","المنوفية","Menoufia"],["Safia Zaghlol","الإسكندرية","Alexandria"],["Sharm El Sheikh","جنوب سيناء","South Sinai"],["Shebeen El Koom 2","المنوفية","Menoufia"],["Shebeen El Koom 3","المنوفية","Menoufia"],["Shebeen El Qanater 2","القليوبية","Qalyubia"],["Sherbeen","الدقهلية","Dakahlia"],["Shubra El Khema 2","القاهرة","Cairo"],["Shubra El Khema 3","القاهرة","Cairo"],["Shubra Street 1","القاهرة","Cairo"],["Shubra Street 2","القاهرة","Cairo"],["Sohag 1","سوهاج","Sohag"],["Sohag 2","سوهاج","Sohag"],["Stock","الجيزة","Giza"],["Suez","السويس","Suez"],["Talaat Harb","الغربية","Gharbia"],["Tanta Mall 2","الغربية","Gharbia"],["Zagazig 1","الشرقية","Sharqia"],["Zagazig 2","الشرقية","Sharqia"],["Zagazig 3","الشرقية","Sharqia"],["Zahraa Nasr City","القاهرة","Cairo"],["Arabella Plaza Mall","القاهرة","Cairo"],["Bani Mazar 2","المنيا","Minya"],["Elsheikh Zayed","الجيزة","Giza"],["Golf City Mall","القاهرة","Cairo"],["Maxim Mall","القاهرة","Cairo"],["New Maadi","القاهرة","Cairo"],["New Mohandseen","الجيزة","Giza"],["New Mokattam","القاهرة","Cairo"],["Shebein Space Mall","المنوفية","Menoufia"],["Tanta","الغربية","Gharbia"],["Zahraa C3 Mall","القاهرة","Cairo"]];
 
+let EXTRA_BRANCHES=[]; /* فروع بتتضاف من إعدادات الداش بورد */
 function buildBranchSelect(){
   const sel=document.getElementById("branch");
   if(!sel)return;
   const groups={};
   BRANCH_GOV.forEach(x=>{(groups[x[1]]=groups[x[1]]||{en:x[2],list:[]}).list.push(x[0])});
+  if(EXTRA_BRANCHES.length)groups["فروع إضافية"]={en:"Added branches",list:EXTRA_BRANCHES.slice()};
   const keys=Object.keys(groups).sort((a,b)=>{
     if(a==="أخرى")return 1; if(b==="أخرى")return -1;
     return groups[b].list.length-groups[a].list.length || a.localeCompare(b,"ar");
@@ -435,7 +437,7 @@ function autoBranch(){
 const qp=new URLSearchParams(location.search);
 const b=(qp.get("b")||qp.get("branch")||"").replace(/-/g," ").trim();
 const pLink=(qp.get("pos")||qp.get("position")||qp.get("job")||"").trim();
-const POS_LABEL={Sales:"سيلز","Deputy Manager":"نائب مدير",Manager:"مدير"};
+const POS_LABEL={}; /* أسماء الوظائف إنجليزي زي الإعدادات بالظبط */
 function tagLink(){
  const t=$("#branchTag"),parts=[];
  if(b)parts.push("📍 "+b);
@@ -450,6 +452,24 @@ function fillPositions(list){
  list.forEach(x=>{const o=document.createElement("option");o.value=x;o.dataset.ar=L[x]||x;o.dataset.en=x;o.textContent=lang==="ar"?o.dataset.ar:o.dataset.en;sel.appendChild(o)});
  sel.value=cur||pLink||"";
 }
+/* إعدادات عامة من السيرفر: أي وظيفة/فرع يتضاف في الداش بورد يظهر هنا لكل الناس */
+async function loadPublicConfig(){
+  if(!/^https:\/\/script\.google/.test(SCRIPT_URL))return;
+  try{
+   const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"publicconfig"})});
+   if(!r.ok)return;
+   const d=await r.json();
+   if(!d||!d.ok)return;
+   if(Array.isArray(d.positions)&&d.positions.length){fillPositions(d.positions.map(String));if(pLink)f.elements.position.value=pLink}
+   if(Array.isArray(d.branches)&&d.branches.length){
+    const have=new Set(BRANCH_GOV.map(x=>x[0]));
+    EXTRA_BRANCHES=[...new Set(d.branches.map(String).filter(x=>x&&!have.has(x)))];
+    buildBranchSelect();
+    const s=$("#branch");
+    if(b){if(![...s.options].some(o=>o.value===b)){const g=document.createElement("optgroup");g.label="أخرى / Other";const o=document.createElement("option");o.value=b;o.textContent=b;g.appendChild(o);s.appendChild(g)}s.value=b;s.classList.add("fromlink");BR_AUTO=false}
+   }
+  }catch(e){}
+}
 if(b){const _s=$("#branch");if(b&&![..._s.options].some(o=>o.value===b)){const _g=document.createElement("optgroup");_g.label="أخرى / Other";const _o=document.createElement("option");_o.value=b;_o.textContent=b;_g.appendChild(_o);_s.appendChild(_g)}_s.value=b;_s.classList.add("fromlink");BR_AUTO=false}
 if(pLink)f.elements.position.value=pLink;
 try{fillPositions(JSON.parse(localStorage.getItem("hrpositions")||"[]"))}catch(e){}
@@ -458,6 +478,7 @@ tagLink();
 if(linkHosted()&&google.script.run.getPositions){
  google.script.run.withSuccessHandler(list=>{fillPositions(list);if(pLink)f.elements.position.value=pLink}).withFailureHandler(()=>{}).getPositions();
 }
+loadPublicConfig();
 
 /* أدوات */
 const dig=s=>s.replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));

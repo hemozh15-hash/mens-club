@@ -249,8 +249,8 @@ body.submitted .wrap{max-width:800px}
   <div><label >🎖️ موقف التجنيد <i>/ Military status</i></label>
    <select name="military" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Completed" data-ar="أدى الخدمة" data-en="Completed"></option><option value="Exempted" data-ar="إعفاء" data-en="Exempted"></option><option value="Postponed" data-ar="مؤجل" data-en="Postponed"></option><option value="Not called" data-ar="لم يُطلب" data-en="Not yet called"></option><option value="N/A" data-ar="لا ينطبق" data-en="Not applicable"></option></select></div>
  </div>
- <label >📷 الصورة الشخصية (اختياري) <i>/ Photo (optional)</i></label>
- <input type="file" name="photo" id="photo" accept="image/*">
+ <label >📷 الصورة الشخصية (إجباري) <i>/ Photo (required)</i></label>
+ <input type="file" name="photo" id="photo" accept="image/*" required>
  <img id="photoPrev" class="hide" alt="">
  <input type="hidden" name="photoData">
  <p class="hint" data-ar="امسح كاميرا الموبايل أو اختار صورة من جهازك — الصورة هتظهر في نسخة الأبلكيشن." data-en="Take a photo or pick one from your device — it will appear on the application copy.">امسح كاميرا الموبايل أو اختار صورة من جهازك — الصورة هتظهر في نسخة الأبلكيشن.</p>
@@ -264,9 +264,9 @@ body.submitted .wrap{max-width:800px}
  <input name="whatsapp" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX">
  <label >📧 البريد الإلكتروني (اختياري) <i>/ Email (optional)</i></label>
  <input name="email" type="email">
- <label >📍 عنوان سكنك (اختياري) <i>/ Your home address (optional)</i></label>
+ <label >📍 عنوان سكنك (إجباري) <i>/ Your home address (required)</i></label>
  <div class="addrwrap">
-  <input name="address" id="address" autocomplete="off" placeholder="مدينة نصر، القاهرة — أو اكتب اسم الشارع">
+  <input name="address" id="address" autocomplete="off" placeholder="مدينة نصر، القاهرة — أو اكتب اسم الشارع" required>
   <div class="sug hide" id="addrSug"></div>
  </div>
  <button class="geo" type="button" id="geoBtn" data-ar="📍 استخدم موقعي الحالي (اختياري)" data-en="📍 Use my current location (optional)">📍 استخدم موقعي الحالي (اختياري)</button>
@@ -597,6 +597,7 @@ function validate(i){
     if(el.name==="nid"&&!/^\d{14}$/.test(el.value)) bad=true;
     if(el.name==="phone"&&!/^01[0125]\d{8}$/.test(el.value)) bad=true;
     if(el.name==="name"&&el.value.trim().split(/\s+/).length<3) bad=true;
+     if(el.name==="photo"&&!f.elements.photoData.value) bad=true;
     el.classList.toggle("bad",bad); if(bad)ok=false;
   });
   const w=f.whatsapp.value; if(i===1&&w&&!/^01[0125]\d{8}$/.test(w)){f.whatsapp.classList.add("bad");ok=false}
@@ -613,8 +614,8 @@ function show(i){
 }
 $("#back").onclick=()=>show(cur-1);
 /* رقم طلب فريد + حفظ الطلب في خزنة الداشبورد المحلية */
-function refNew(){const d=new Date(),p=n=>String(n).padStart(2,"0");
- return "MC-"+String(d.getFullYear()).slice(2)+p(d.getMonth()+1)+p(d.getDate())+"-"+String(1000+Math.floor(Math.random()*9000))}
+function localCount(){let a=[];try{a=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]")}catch(e){}return Array.isArray(a)?a.length:0}
+function refNew(){return "MC-"+(1+localCount())}
 function saveLocal(data){
  data.ref=data.ref||refNew();
  data.Status=data.Status||"New";
@@ -642,13 +643,15 @@ $("#next").onclick=async()=>{
  if(cur<3)return show(cur+1);
  const btn=$("#next");btn.disabled=true;btn.textContent="...";
  const data=Object.fromEntries(new FormData(f));data.submittedAt=new Date().toISOString();data.ref=refNew();
- saveLocal(data);
+ let served=null;
  /* لو الاستمارة شغالة جوه Google Apps Script — الإرسال للسيرفر مباشرة */
  if(typeof google!=="undefined"&&google.script&&google.script.run){
-  await new Promise(res=>{try{google.script.run.withSuccessHandler(res).withFailureHandler(res).submitApplication(data)}catch(e){res(null)}});
+  served=await new Promise(res=>{try{google.script.run.withSuccessHandler(res).withFailureHandler(res).submitApplication(data)}catch(e){res(null)}});
  }else if(/^https:\/\/script\.google/.test(SCRIPT_URL)){
-  try{await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)})}catch(e){}
+  try{const rr=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});served=await rr.json()}catch(e){}
  }
+ if(served&&served.ok&&served.ref)data.ref=served.ref;
+ saveLocal(data);
  finish(data);
 };
 

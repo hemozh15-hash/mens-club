@@ -1138,6 +1138,8 @@ function openDt(row){
  <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap"><span>${T("الفرع:","Branch:")}</span><select id="bs" style="flex:1;min-width:150px">${branchOpts(r.branch)}</select><button class="btn" id="nbset" style="padding:4px 9px;white-space:nowrap" title="${T("اختيار أقرب فرع لإحداثيات المتقدم","Pick the nearest branch to the applicant")}">🎯 ${T("أقرب فرع","Nearest")}</button><span class="mgrchip" id="bmgr">${mgrHTML(r.branch)}</span></div>
  <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap"><span>${T("مصدر التقديم:","Source:")}</span><select id="srcs" style="flex:1;min-width:150px">${srcOpts(r)}</select></div>
  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="rb" style="flex:1">${T("🖨️ عرض الاستمارة / طباعة","🖨️ View form / Print")}</button></div>
+ <div class="rejbox" style="margin-top:10px"><div class="rej-t">${T("✏️ تعديل بيانات الموظف","✏️ Edit employee details")}</div>
+  <div class="rej-chips"><select id="ep" style="flex:1;min-width:130px">${POS.map(p=>`<option value="${esc(p)}"${p===r.position?" selected":""}>${esc(p)}</option>`).join("")}</select><input type="date" id="ed" value="${esc(r.dob||"")}" style="flex:1;min-width:130px"><button class="btn r" id="es">${T("حفظ","Save")}</button></div><div class="hint" id="em"></div></div>
  <div class="hrpick"><div class="hrpick-t">${T("👤 HR المسؤول","👤 Responsible HR")}</div>
   <div class="hrpick-r"><select id="hrs"><option value="">${T("— بدون —","— none —")}</option>${HRS.map(h=>`<option value="${h.id}" style="color:${hrColor(h.id)}"${h.id===r._hr?" selected":""}>${esc(h.name)}</option>`).join("")}</select><input id="hrp" type="password" class="${sel?"":"hide"}" autocomplete="off" placeholder="${T("كلمة المرور","Password")}"><button class="btn r" id="hrb">${T("تأكيد","Confirm")}</button></div>
   <div class="hrpick-m" id="hrm">${sel?`<span class="hrbadge" style="color:${hrColor(sel.id)}">✅ ${esc(sel.name)} · #${esc(sel.pass)}</span>`:T("لم يتم اختيار HR مسؤول","No responsible HR selected")}</div>
@@ -1154,6 +1156,19 @@ function openDt(row){
  $("#bs").onchange=e=>setBranch(r,e.target.value);
  $("#ss").onchange=e=>setStatus(r,e.target.value);
  $("#rb").onclick=()=>openReport(r);
+ $("#es").onclick=async()=>{
+  const np=$("#ep").value,nd=$("#ed").value;
+  if(!np||!nd){$("#em").textContent=T("الوظيفة والتاريخ مطلوبان","Position and date are required");return}
+  const oP=r.position,oD=r.dob;r.position=np;r.dob=nd;draw();
+  try{
+   if(!DEMO){
+    const a=await api(Object.assign({action:"position",position:np},idOf(r)));
+    const b=await api(Object.assign({action:"dob",dob:nd},idOf(r)));
+    if((a&&a.ok===false)||(b&&b.ok===false))throw 0;
+   }
+   $("#em").textContent=T("✅ اتحفظ","✅ Saved");
+  }catch(e){r.position=oP;r.dob=oD;draw();$("#em").textContent=T("تعذر الحفظ، حاول تاني","Could not save. Try again")}
+ };
  getPhoto(r).then(p=>{if(p&&OPEN_ROW===row){const av=$("#av");if(av){av.textContent="";const im=document.createElement("img");im.src=p;im.alt="";im.style.cssText="width:100%;height:100%;object-fit:cover";av.appendChild(im)}}}).catch(()=>{});
  $$("#rejbox .rejchip").forEach(c=>c.onclick=()=>{const hc=$("#hc");hc.value=c.dataset.r;$$("#rejbox .rejchip").forEach(x=>x.classList.toggle("on",x===c));hc.focus()});
  document.querySelectorAll("[data-w]").forEach(c=>c.onclick=()=>{waSel=c.dataset.w;document.querySelectorAll("[data-w]").forEach(x=>x.classList.toggle("on",x===c));$("#wt").value=waText(r,waSel);wdUpd()});

@@ -1130,11 +1130,14 @@ function openDt(row){
  $("#ws").onclick=()=>{window.open(waLink(r,$("#wt").value),"_blank");setStatus(r,waSel);$("#ss").value=waSel};
 }
 async function setStatus(r,s){const oS=r.Status,oT=r.StatusChangedAt;r.Status=s;r.StatusChangedAt=new Date().toISOString();draw();
- try{const x=await api(Object.assign({action:"status",status:s},idOf(r)));if(!x||x.ok===false)throw 0;
+ let err="";
+ try{const x=await api(Object.assign({action:"status",status:s},idOf(r)));if(!x||x.ok===false){err=(x&&x.err)||"";throw 0}
   /* لو تم التعيين → افتح تاب فترة الاختيار على طول */
   if(s==="Hired"){$("#dt").classList.remove("on");S.branch="";S.pos="";S.hr="";S.q="";S.status="all";S.tab="prep";draw()}
  }
- catch(e){r.Status=oS;r.StatusChangedAt=oT;draw();const ss=$("#ss");if(ss)ss.value=oS;alert(T("تعذر حفظ الحالة، حدّث الصفحة وحاول تاني.","Could not save status. Refresh and try again."))}}
+ catch(e){r.Status=oS;r.StatusChangedAt=oT;draw();const ss=$("#ss");if(ss)ss.value=oS;
+  load().then(()=>{if(!ROWS.some(y=>y.ref===r.ref))$("#dt").classList.remove("on")}).catch(()=>{});
+  alert(T("تعذر حفظ الحالة. اعمل تحديث للصفحة (Ctrl+Shift+R) وجرب تاني"+(err?" · "+err:""),"Could not save status. Refresh and try again."+(err?" · "+err:"")))}}
 
 
 function branchOpts(cur){const l=BRANCHES.slice();if(cur&&l.indexOf(cur)<0)l.push(cur);return l.map(b=>`<option value="${esc(b)}"${b===cur?" selected":""}>${esc(b)}</option>`).join("")}

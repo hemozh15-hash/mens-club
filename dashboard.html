@@ -8,13 +8,15 @@
 <style>
 :root{--red:#d71920;--ink:#1a1a1a;--line:#e6e6e6;--mu:#777;--bg:#fafafa;--grn:#1f8a4c}
 *{box-sizing:border-box}body{margin:0;font-family:Cairo,sans-serif;background:var(--bg);color:var(--ink)}
-.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:0 24px;background:#fff;border-bottom:3px solid var(--red)}
-.brandwrap{display:flex;align-items:center;gap:10px;min-width:0}
-.toplogo{width:auto;height:52px;box-sizing:content-box;object-fit:contain;flex:none;display:block;border:3px solid #000;padding:2px;background:#fff}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;height:72px;padding:0 24px;background:#fff;border-bottom:3px solid var(--red)}
+.brandframe{display:flex;align-items:center;gap:10px;height:72px;box-sizing:border-box;padding:0 12px;border:3px solid #000;background:#fff;flex:none}
+.toplogo{width:auto;height:52px;object-fit:contain;flex:none;display:block}
+.brandtitle{font-weight:800;font-size:20px;line-height:1.2;white-space:nowrap}.brandtitle b{color:var(--red)}
+.brandmeta{display:flex;flex-direction:column;gap:3px;min-width:0}
 .logo{font-weight:800;font-size:20px}.logo b{color:var(--red)}
-.own{font-size:11.5px;font-weight:800;color:#1565c0;margin-top:3px;letter-spacing:.4px}
+.own{font-size:11.5px;font-weight:800;color:#1565c0;letter-spacing:.4px}
 .own span{color:var(--mu);font-weight:700;letter-spacing:.2px}
-.conn{display:inline-block;margin-top:5px;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:11px;background:#f2f2f2;color:#777;border:1px solid #e2e2e2;white-space:nowrap}
+.conn{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:11px;background:#f2f2f2;color:#777;border:1px solid #e2e2e2;white-space:nowrap}
 .conn.on{background:#eaf7ef;color:#0f5132;border-color:#bfe3cd}
 .conn.off{background:#fdeaea;color:#9b1119;border-color:#f3c7c7}
 .topact{display:flex;flex-wrap:wrap;gap:6px}
@@ -172,16 +174,15 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 /* ===== توافق الموبايل ===== */
 @media screen and (max-width:820px){
  body{-webkit-text-size-adjust:100%}
- .top{position:sticky;top:0;z-index:4;height:62px;padding:0 12px;gap:8px}
- .top>.brandwrap{flex:1 1 100%;height:100%;overflow:hidden}
+ .top{position:sticky;top:0;z-index:4;height:72px;padding:0 12px;gap:8px;flex-wrap:nowrap}
+ .brandframe{height:72px;padding:0 8px;gap:6px;flex:1 1 auto;min-width:0}
  .toplogo{height:52px;width:auto}
- .logo{font-size:15px}
- .own{font-size:9px;margin-top:1px}
- .conn{font-size:10px;margin-top:2px;padding:1px 7px}
+ .brandtitle{font-size:15px;overflow:hidden;text-overflow:ellipsis}
+ .brandmeta{display:none}
  .top>.topact{position:absolute;left:0;right:0;top:100%;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding:6px 12px;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none;-webkit-overflow-scrolling:touch}
  .top>.topact::-webkit-scrollbar{display:none}
  .top>.topact>*{flex:none}
- .tabstrip{padding:50px 12px 8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ .tabstrip{padding:56px 12px 8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
  .tabstrip::-webkit-scrollbar{display:none}
  .tabstrip>*{flex:none}
  .btn{padding:7px 12px;font-size:13px}
@@ -257,7 +258,8 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 <div id="app" class="hide">
  <div id="demo" class="hide noprint" style="background:#fff3cd;color:#664d03;text-align:center;padding:6px;font-size:13px;font-weight:600" data-ar="نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ" data-en="Demo mode with sample data — changes are not saved">نسخة تجريبية ببيانات وهمية، التعديلات هنا مش بتتحفظ</div>
  <div class="top">
-   <div class="brandwrap"><img class="toplogo" id="toplogo" alt="MC Men's Club"><div class="logo">MC <b>MEN'S CLUB</b> | <span class="mix"><span class="mix-ar">الموارد البشرية</span><span class="mix-en">Human Resources</span></span><div class="own">EBRAHIM HASSAN <span>· HR ADMINISTRATION</span></div><span id="conn" class="conn">⏳ بنفحص الاتصال...</span></div></div>
+   <div class="brandframe"><img class="toplogo" id="toplogo" alt="MC Men's Club"><div class="brandtitle">MC <b>MEN'S CLUB</b> | <span class="mix"><span class="mix-ar">الموارد البشرية</span><span class="mix-en">Human Resources</span></span></div></div>
+   <div class="brandmeta"><div class="own">EBRAHIM HASSAN <span>· HR ADMINISTRATION</span></div><span id="conn" class="conn">⏳ بنفحص الاتصال...</span></div>
   <div class="topact noprint"><a class="btn" id="apply" href="https://hemozh15-hash.github.io/mc-hr-form/" target="_blank" rel="noopener" data-ar="📝 استمارة التقديم" data-en="📝 Apply form">📝 استمارة التقديم</a><button class="btn" id="lang">🌐 عربي</button><button class="btn" id="reload" data-ar="تحديث" data-en="Refresh">تحديث</button><button class="btn" id="clrtest" data-ar="🧪 مسح الاختبار" data-en="🧪 Clear test">🧪 مسح الاختبار</button><button class="btn" id="csv" data-ar="تصدير Excel" data-en="Export Excel">تصدير Excel</button><button class="btn r" id="prt" onclick="window.print()" data-ar="طباعة A4" data-en="Print A4">طباعة A4</button></div></div>
   <div class="tabstrip noprint"><button class="btn" data-tab="dash" data-ar="الداش بورد" data-en="Dashboard">الداش بورد</button><button class="btn" data-tab="list" data-ar="الطلبات" data-en="Applications">الطلبات</button><button class="btn" data-tab="stores" data-ar="STORES" data-en="STORES">STORES</button><button class="btn" data-tab="hq" data-ar="HQ" data-en="HQ">HQ</button><button class="btn" data-tab="wearhouse" data-ar="WEARHOUSE" data-en="WEARHOUSE">WEARHOUSE</button><button class="btn" data-tab="pipe" data-ar="المراحل" data-en="Pipeline">المراحل</button><button class="btn" data-tab="prep" data-ar="فترة الاختيار" data-en="Preparation Period">فترة الاختيار</button><button class="btn" data-tab="set" data-ar="الإعدادات" data-en="Settings">الإعدادات</button></div>
  <div class="wrap">

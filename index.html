@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MC Men's Club | انضم لفريقنا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+
+<!-- Google Maps JS API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiQQV8SZQ7rqUxYNnOEVwPgTMtr8eYquM&libraries=marker&loading=async&v=weekly" async></script>
+<style>
+:root{--bg:#ffffff;--card:#ffffff;--line:#dedede;--or:#e11d2a;--or2:#9b1119;--tx:#1a1a1a;--mu:#666;--err:#d71920}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,system-ui,sans-serif;line-height:1.6;padding:0 0 40px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+header{text-align:center;padding:28px 0 8px}
+.logo{font-weight:800;font-size:44px;letter-spacing:4px}.logo b{color:var(--or)}
+h1{font-size:34px;font-weight:800;margin:6px 0 0;line-height:1.2}h1 em{font-style:normal;color:var(--or)}
+img.logo{display:block;margin:0 auto;width:260px;max-width:70%;height:auto;mix-blend-mode:multiply}.sub{color:var(--mu);margin:6px 0 0}
+.lang{position:absolute;top:12px;inset-inline-end:12px;background:none;border:1px solid var(--or);color:var(--or);border-radius:20px;padding:4px 14px;font:inherit;cursor:pointer;z-index:2}
+.branch{display:inline-block;margin-top:12px;border:2px solid var(--or);border-radius:30px;padding:2px 16px;font-weight:600}
+.bar{display:flex;gap:6px;margin:20px 0}.bar i{flex:1;height:5px;border-radius:3px;background:var(--line)}.bar i.on{background:var(--or)}
+form{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.step{display:none}.step.on{display:block}
+h2{margin:0 0 14px;font-size:20px;color:var(--or)}
+label{display:block;font-weight:600;margin:14px 0 4px;font-size:15px}
+label i{font-style:normal;font-weight:400;color:var(--mu);font-size:13.5px}
+h2 i{font-style:normal;font-weight:600;color:var(--mu);font-size:14px}
+input,select,textarea{width:100%;background:#fafafa;border:1.5px solid var(--line);border-radius:10px;color:var(--tx);padding:11px 12px;font:inherit;font-size:16px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+input.bad,select.bad{border-color:var(--err)}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.hint{color:var(--mu);font-size:13px;margin-top:3px}
+#map{height:230px;border-radius:12px;margin-top:10px;border:1px solid var(--line)}
+.geo{margin-top:8px;background:none;border:1.5px dashed var(--or);color:var(--or);border-radius:10px;padding:9px;width:100%;font:inherit;cursor:pointer}
+/* ===== العنوان + الخريطة (شبه أوبر) ===== */
+.addrwrap{position:relative}
+.sug{position:absolute;inset-inline:0;top:calc(100% + 4px);z-index:60;background:var(--card);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.16);overflow:hidden;max-height:250px;overflow-y:auto}
+.sug .it{padding:10px 12px;cursor:pointer;font-size:14px;border-bottom:1px solid #f1f1f1;text-align:start}
+.sug .it:last-child{border-bottom:0}
+.sug .it:hover,.sug .it.on{background:#fff4f4}
+.sug .it b{display:block;font-weight:800;font-size:14px;color:var(--tx)}
+.sug .it small{display:block;color:var(--mu);font-size:12px;margin-top:2px;line-height:1.35}
+.sug .empty{padding:11px 12px;color:var(--mu);font-size:13px}
+#map{position:relative;z-index:0}
+#mapNote{font-weight:600}
+.gm-style{direction:ltr}
+/* ===== حالة الربط + اختبار سريع ===== */
+.testbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+.connchip{font-size:12.5px;font-weight:800;border-radius:14px;padding:3px 11px;background:#f2f2f2;color:#777;border:1px solid #e2e2e2;white-space:nowrap}
+.connchip.on{background:#eaf7ef;color:#0f5132;border-color:#bfe3cd}
+.connchip.local{background:#fff7e6;color:#8a5a00;border-color:#f0d9a8}
+.testlink{background:none;border:0;color:var(--or);font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;text-decoration:underline;padding:4px;white-space:nowrap}
+.connmsg{font-size:13px;font-weight:700;margin-top:8px;line-height:1.6}
+input.fromlink,select.fromlink{background:#eaf7ef;border-color:#7bc894;font-weight:800}
+.branch{background:#eaf7ef;color:#0f5132;border:2px solid #7bc894;border-radius:30px;padding:4px 16px;font-size:13px;font-weight:800;margin-top:12px}
+gmp-place-autocomplete{width:100%;color-scheme:dark}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin-top:16px}.chk input{width:auto;margin-top:6px}
+.nav{display:flex;gap:10px;margin-top:22px}
+button.p,button.s{flex:1;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
+button.p{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
+button.s{background:var(--line);color:var(--tx)}
+button:disabled{opacity:.5}
+.done{text-align:center;padding:30px 10px}.done h2{font-size:26px;color:var(--tx)}
+.hide{display:none!important}
+#msg{color:var(--err);margin-top:10px;min-height:20px}
+
+/* ===== أبلكيشن قابل للطباعة ===== */
+.doc{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;text-align:start;box-shadow:0 8px 24px rgba(0,0,0,.06);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.doc-top{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-bottom:3px solid var(--or);background:linear-gradient(135deg,rgba(225,29,42,.08),rgba(155,17,25,.08))}
+.doc-photo{width:88px;min-height:112px;flex:0 0 auto;border:1.5px dashed var(--or);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:var(--mu);overflow:hidden;background:#fff}
+.doc-photo span{padding:6px}
+.doc-photo img{width:88px;height:112px;object-fit:cover;display:block}
+.doc-titles{flex:1;text-align:center;padding-top:2px}
+.doc-titles h2{margin:6px 0 0;font-size:24px;color:var(--tx);letter-spacing:1px}
+.doc-titles p{margin:2px 0 0;font-size:14px;font-weight:800;color:var(--or)}
+.doc-logo{display:block;margin:0 auto;width:56px;height:auto;mix-blend-mode:multiply}
+#photo{padding:8px}
+#photoPrev{display:block;width:76px;height:94px;object-fit:cover;border:1px solid var(--line);border-radius:8px;margin-top:8px}
+.doc-meta{display:flex;flex-wrap:wrap;gap:8px;padding:12px 18px;border-bottom:1px dashed var(--line)}
+.doc-meta div{flex:1;min-width:150px;background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.doc-meta span{display:block;font-size:12px;color:var(--mu)}
+.doc-meta b{font-size:15px}
+.doc-meta .st{color:var(--or)}
+.sect{margin-top:16px;padding:0 18px}
+.sect h3{margin:0 0 10px;background:var(--or);color:#fff;font-size:14px;font-weight:800;padding:5px 10px;border-radius:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px 18px}
+.fld{border-bottom:1px solid #c9c9c9;padding-bottom:3px;min-width:0}
+.fld span{display:block;font-size:11.5px;color:var(--mu)}
+.fld b{font-size:15px;font-weight:700;color:var(--tx);word-break:break-word;white-space:pre-wrap}
+.fld.wide{grid-column:1/-1}
+.decl{margin:16px 18px 0;padding-top:10px;border-top:1px solid var(--line)}
+.decl h4{margin:0 0 4px;font-size:14px;color:var(--or);letter-spacing:.5px}
+.decl p{margin:0;font-size:13.5px;color:var(--tx);line-height:1.7}
+.sigs{display:flex;gap:14px 18px;padding:18px 18px 4px;flex-wrap:nowrap;align-items:flex-end}
+.sigs div{flex:1 1 0;display:flex;align-items:baseline;gap:6px;font-size:12.5px;color:var(--mu);min-width:0}
+.sigs i{flex:1 1 24px;border-bottom:1.5px dashed var(--tx);min-width:24px}
+body.submitted .wrap{max-width:800px}
+.hrbox{margin:14px 18px 18px;border:1.5px solid #303030;overflow:hidden}
+.hrbox-h{background:#303030;color:#fff;font-size:13px;font-weight:800;padding:5px 12px}
+.hrbox-g{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;padding:12px 14px}
+.hrbox-g span{display:block;font-size:11.5px;color:var(--mu)}
+.hrbox-g i{display:block;border-bottom:1.5px solid #999;height:34px}
+.thanks{text-align:center;font-weight:800;font-size:19px;margin:18px 0 0}
+
+/* ===== رسالة التسجيل بعد الإرسال ===== */
+.confirm{max-width:520px;margin:22px auto;padding:38px 28px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.confirm-badge{width:78px;height:78px;margin:0 auto 18px;border-radius:50%;background:linear-gradient(135deg,rgba(225,29,42,.12),rgba(155,17,25,.14));display:flex;align-items:center;justify-content:center;font-size:38px}
+.confirm-title{margin:0 0 10px;font-size:24px;font-weight:800;color:var(--tx)}
+.confirm-text{margin:0;font-size:16px;color:var(--mu);line-height:1.8}
+.confirm-divider{width:60px;height:3px;background:var(--or);border-radius:3px;margin:22px auto}
+.confirm-thanks{margin:0 0 6px;font-size:18px;font-weight:800;color:var(--tx)}
+.confirm-sign{margin:0;font-size:14px;font-weight:600;color:var(--or)}
+
+/* ===== توافق الموبايل ===== */
+@media (max-width:620px){
+ body{padding-bottom:18px;-webkit-text-size-adjust:100%}
+ .wrap{padding:0 12px}
+ header{padding:16px 0 4px}
+ img.logo{width:190px;max-width:62%}
+ h1{font-size:25px;letter-spacing:0}
+ .sub{font-size:14px;line-height:1.7}
+ .lang{top:8px;inset-inline-end:8px;padding:3px 12px;font-size:13.5px}
+ form{padding:14px;border-radius:14px}
+ h2{font-size:17.5px;line-height:1.4}
+ h2 i{font-size:12px}
+ label{font-size:14.5px;margin-top:12px}
+ input,select,textarea{font-size:16px;padding:10px 11px}
+ .row{flex-wrap:wrap;gap:8px}
+ .row>div{flex:1 1 140px;min-width:0}
+ .bar{margin:14px 0}
+ #map{height:190px}
+ .sug{max-height:210px}
+ .geo{padding:11px;font-size:15px}
+ .nav{position:sticky;bottom:0;background:#fff;padding:8px 0;margin-top:18px;box-shadow:0 -6px 16px rgba(0,0,0,.07);z-index:40}
+ button.p,button.s{padding:12px;font-size:16px;border-radius:11px}
+ .confirm{margin:14px auto;padding:26px 18px;border-radius:16px}
+ .confirm-title{font-size:21px}
+ .confirm-text{font-size:15px}
+ body.submitted .wrap{max-width:none}
+ .doc-top{gap:10px;padding:12px}
+ .doc-titles h2{font-size:18px}
+ .doc-titles p{font-size:12px}
+ .doc-logo{width:44px}
+ .doc-photo{width:64px;min-height:82px}
+ .doc-photo img{width:64px;height:82px}
+ .doc-meta{padding:10px 12px}
+ .doc-meta div{min-width:112px;flex:1 1 112px;padding:5px 8px}
+ .sect{padding:0 12px}
+ .grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px 12px}
+ .sigs{flex-wrap:wrap;padding:14px 12px 4px}
+ .sigs div{flex:1 1 100%}
+ .hrbox{margin:12px}
+ .hrbox-g{grid-template-columns:1fr;gap:10px 12px;padding:10px 12px}
+ .sect h3{font-size:13px}
+ .fld b{font-size:14px}
+}
+@media (max-width:380px){
+ h1{font-size:22px}
+ img.logo{width:160px}
+ form{padding:12px}
+ .row>div{flex:1 1 100%}
+}
+
+@page{size:A4 portrait;margin:8mm}
+@media print{
+ html,body{height:auto!important;overflow:visible!important;padding:0!important;background:#fff!important}
+ body.submitted .lang,body.submitted header,body.submitted .bar,body.submitted form,body.submitted .nav,body.submitted .thanks,body.submitted .testbar,body.submitted .connmsg,body.submitted .confirm{display:none!important}
+ body.submitted .wrap{max-width:100%!important;padding:0!important;margin:0!important}
+ body.submitted .done{padding:0!important;margin:0!important}
+ .doc{border:0;border-radius:0;box-shadow:none;transform-origin:top center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .doc-top{padding:8px 12px;gap:12px}
+ .doc-meta{padding:6px 12px;gap:8px 16px}
+ .sect{margin-top:8px;padding:0 12px}
+ .sect h3{margin-bottom:5px;padding:3px 8px;font-size:12px}
+ .grid{gap:6px 14px}
+ .fld{padding-bottom:1px}
+ .fld span{font-size:10px}
+ .fld b{font-size:12.5px;line-height:1.25}
+ .decl{margin:8px 12px 0;padding-top:6px}
+ .decl p{font-size:11.5px;line-height:1.45}
+ .sigs{padding:8px 12px 2px}
+ .hrbox{margin:8px 12px 10px}
+ .hrbox-g{padding:6px 10px;gap:6px 12px}
+ .hrbox-g i{height:20px}
+ .sect,.fld,.doc-meta div,.doc-top,.decl,.sigs,.hrbox{break-inside:avoid;page-break-inside:avoid}
+}
+.lnkbtn{background:none;border:0;color:var(--or);font-weight:800;cursor:pointer;text-decoration:underline;font-size:inherit;padding:0}
+</style>
+</head>
+<body>
+<button class="lang" id="langBtn" type="button">English</button>
+<div class="wrap">
+<header>
+ <img class="logo" alt="MC Men's Club" src="data:image/png;base64,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">
+ <h1><span data-ar="عايزينكم" data-en="We want you">عايزينكم</span> <em data-ar="معانا" data-en="on our team">معانا</em></h1>
+ <p class="sub" data-ar="سجّل بياناتك في دقيقتين وفريق الموارد البشرية هيراجع طلبك" data-en="Apply in two minutes. Our HR team will review your application.">سجّل بياناتك في دقيقتين وفريق الموارد البشرية هيراجع طلبك</p>
+ <div class="branch hide" id="branchTag"></div>
+</header>
+<div class="bar" id="bar"><i class="on"></i><i></i><i></i><i></i></div>
+<div class="testbar noprint" id="testbar">
+ <span class="connchip" id="connChip">⏳ ...</span>
+ <button class="testlink" type="button" id="testBtn" data-ar="🔗 اختبار الربط" data-en="🔗 Test connection">🔗 اختبار الربط</button>
+ <button class="testlink" type="button" id="demoBtn" data-ar="🧪 أرسل طلب تجريبي" data-en="🧪 Send test application">🧪 أرسل طلب تجريبي</button>
+</div>
+<div class="connmsg hide" id="connMsg"></div>
+
+<form id="f" novalidate>
+<input type="hidden" name="lat"><input type="hidden" name="lng"><input type="hidden" name="lang" value="ar">
+
+<section class="step on">
+ <h2 >💼 الوظيفة والبيانات الشخصية <i>/ Job and personal details</i></h2>
+ <label >🏢 فرع التقديم <i>/ Applying branch</i></label>
+ <select name="branch" id="branch" required></select>
+ <p class="hint" id="nearHint" style="margin:6px 0 0"></p>
+ <label >💼 الوظيفة المستهدفة <i>/ Position</i></label>
+ <select name="position" required>
+  <option value="" data-ar="اختر الوظيفة" data-en="Select a position"></option>
+  <option value="Sales" data-ar="سيلز" data-en="Sales"></option>
+  <option value="Deputy Manager" data-ar="نائب مدير" data-en="Deputy Manager"></option>
+  <option value="Manager" data-ar="مدير" data-en="Manager"></option>
+ </select>
+ <label >👤 الاسم الكامل (رباعي) <i>/ Full name (four names)</i></label>
+ <input name="name" required minlength="8" autocomplete="name">
+ <div class="row">
+  <div><label >🚻 النوع <i>/ Gender</i></label>
+   <select name="gender" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Male" data-ar="ذكر" data-en="Male"></option><option value="Female" data-ar="أنثى" data-en="Female"></option></select></div>
+  <div><label >🎂 تاريخ الميلاد <i>/ Date of birth</i></label>
+   <input type="date" name="dob" id="dob" required></div>
+ </div>
+ <label >🪪 الرقم القومي (14 رقم) — اختياري <i>/ National ID (14 digits) — optional</i></label>
+ <input name="nid" inputmode="numeric" maxlength="14">
+ <div class="row">
+  <div><label >💍 الحالة الاجتماعية <i>/ Marital status</i></label>
+   <select name="marital" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Single" data-ar="أعزب / عزباء" data-ar-both="أعزب / عزباء" data-ar-m="أعزب" data-ar-f="عزباء" data-en="Single"></option><option value="Married" data-ar="متزوج / متزوجة" data-ar-both="متزوج / متزوجة" data-ar-m="متزوج" data-ar-f="متزوجة" data-en="Married"></option><option value="Other" data-ar="أخرى" data-en="Other"></option></select></div>
+  <div><label >🎖️ موقف التجنيد <i>/ Military status</i></label>
+   <select name="military" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Completed" data-ar="أدى الخدمة" data-en="Completed"></option><option value="Exempted" data-ar="إعفاء" data-en="Exempted"></option><option value="Postponed" data-ar="مؤجل" data-en="Postponed"></option><option value="Not called" data-ar="لم يُطلب" data-en="Not yet called"></option><option value="N/A" data-ar="لا ينطبق" data-en="Not applicable"></option></select></div>
+ </div>
+ <label >📷 الصورة الشخصية (اختياري) <i>/ Photo (optional)</i></label>
+ <input type="file" name="photo" id="photo" accept="image/*">
+ <img id="photoPrev" class="hide" alt="">
+ <input type="hidden" name="photoData">
+ <p class="hint" data-ar="امسح كاميرا الموبايل أو اختار صورة من جهازك — الصورة هتظهر في نسخة الأبلكيشن." data-en="Take a photo or pick one from your device — it will appear on the application copy.">امسح كاميرا الموبايل أو اختار صورة من جهازك — الصورة هتظهر في نسخة الأبلكيشن.</p>
+</section>
+
+<section class="step">
+ <h2 >📇 التواصل والعنوان <i>/ Contact and address</i></h2>
+ <label >📱 رقم الموبايل <i>/ Mobile number</i></label>
+ <input name="phone" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX" required autocomplete="tel">
+ <label >💬 رقم واتساب (لو مختلف) <i>/ WhatsApp (if different)</i></label>
+ <input name="whatsapp" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX">
+ <label >📧 البريد الإلكتروني (اختياري) <i>/ Email (optional)</i></label>
+ <input name="email" type="email">
+ <label >📍 عنوان سكنك (اختياري) <i>/ Your home address (optional)</i></label>
+ <div class="addrwrap">
+  <input name="address" id="address" autocomplete="off" placeholder="مدينة نصر، القاهرة — أو اكتب اسم الشارع">
+  <div class="sug hide" id="addrSug"></div>
+ </div>
+ <button class="geo" type="button" id="geoBtn" data-ar="📍 استخدم موقعي الحالي (اختياري)" data-en="📍 Use my current location (optional)">📍 استخدم موقعي الحالي (اختياري)</button>
+ <div id="map" class="hide"></div>
+ <p class="hint" id="mapNote" data-ar="📌 اختياري: اكتب عنوانك وهتظهر الاقتراحات، واختار العنوان اللي يظهر على الخريطة." data-en="📌 Optional: start typing your address to see suggestions, then pick one to pin it on the map.">📌 اختياري: اكتب عنوانك وهتظهر الاقتراحات، واختار العنوان اللي يظهر على الخريطة.</p>
+ <p class="hint" id="addrShow"></p>
+</section>
+
+<section class="step">
+ <h2 >🎓 التعليم والخبرة <i>/ Education and experience</i></h2>
+ <label >🎓 المؤهل الدراسي <i>/ Education level</i></label>
+ <select name="edu" id="edu" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Student" data-ar="طالب — مازلت أدرس" data-en="Student (still studying)"></option><option value="Preparatory" data-ar="إعدادية" data-en="Preparatory"></option><option value="Secondary" data-ar="ثانوية" data-en="Secondary"></option><option value="Diploma" data-ar="دبلوم" data-en="Diploma"></option><option value="Institute" data-ar="معهد" data-en="Institute"></option><option value="Bachelor" data-ar="بكالوريوس / ليسانس" data-en="Bachelor's"></option><option value="Postgrad" data-ar="دراسات عليا" data-en="Postgraduate"></option></select>
+ <label >📚 التخصص / الكلية / الجامعة <i>/ Major, faculty, university</i></label>
+ <input name="major">
+ <div id="yearBox" class="hide">
+  <label >📖 أنت في الفرقة كام؟ <i>/ Which year are you in?</i></label>
+  <select name="year"><option value="" data-ar="اختر" data-en="Select"></option><option value="1" data-ar="الفرقة الأولى" data-en="1st year"></option><option value="2" data-ar="الفرقة الثانية" data-en="2nd year"></option><option value="3" data-ar="الفرقة الثالثة" data-en="3rd year"></option><option value="4" data-ar="الفرقة الرابعة" data-en="4th year"></option><option value="5+" data-ar="الفرقة الخامسة فأعلى" data-en="5th year or more"></option></select>
+ </div>
+ <div id="gradBox">
+  <label >🗓️ سنة التخرج <i>/ Graduation year</i></label>
+  <input name="gradYear" inputmode="numeric" maxlength="4" placeholder="2024">
+ </div>
+ <label >🧳 هل عندك خبرة سابقة؟ <i>/ Any previous experience?</i></label>
+ <select name="hasExp" id="hasExp"><option value="No" data-ar="لا" data-en="No"></option><option value="Yes" data-ar="نعم" data-en="Yes"></option></select>
+ <div id="expBox" class="hide">
+  <label >🏭 آخر جهة عمل <i>/ Last employer</i></label><input name="lastEmployer">
+  <div class="row">
+   <div><label >📋 المسمى الوظيفي <i>/ Job title</i></label><input name="lastTitle"></div>
+   <div><label >⏳ مدة العمل <i>/ Duration</i></label><input name="lastDuration" placeholder="2 years"></div>
+  </div>
+  <label >🤔 سبب ترك العمل <i>/ Reason for leaving</i></label><input name="leaveReason">
+ </div>
+ <label >🗣️ لغات ومهارات (اختياري) <i>/ Languages and skills (optional)</i></label>
+ <input name="skills">
+</section>
+
+<section class="step">
+ <h2 >🚀 الاستعداد للعمل <i>/ Availability</i></h2>
+ <label >🚀 تقدر تبدأ امتى؟ <i>/ When can you start?</i></label>
+ <select name="startWhen" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Immediately" data-ar="فوراً" data-en="Immediately"></option><option value="1 week" data-ar="خلال أسبوع" data-en="Within a week"></option><option value="2 weeks" data-ar="خلال أسبوعين" data-en="Within 2 weeks"></option><option value="1 month" data-ar="خلال شهر" data-en="Within a month"></option></select>
+ <label >🌙 مستعد للعمل بنظام الورديات والإجازات الرسمية؟ <i>/ Willing to work shifts and public holidays?</i></label>
+ <select name="shifts" required><option value="" data-ar="اختر" data-en="Select"></option><option value="Yes" data-ar="نعم" data-en="Yes"></option><option value="No" data-ar="لا" data-en="No"></option></select>
+ <label >💰 الراتب المتوقع (اختياري) <i>/ Expected salary (optional)</i></label>
+ <input name="salary" inputmode="numeric">
+ <label >📣 عرفت عن الوظيفة منين؟ <i>/ How did you hear about us?</i></label>
+ <select name="source"><option value="QR" data-ar="QR في الفرع" data-en="QR code in store"></option><option value="Facebook" data-ar="فيسبوك" data-en="Facebook"></option><option value="WhatsApp" data-ar="واتساب" data-en="WhatsApp"></option><option value="Friend" data-ar="صديق / موظف" data-en="Friend / employee"></option><option value="Other" data-ar="أخرى" data-en="Other"></option></select>
+ <label >📝 ملاحظات (اختياري) <i>/ Notes (optional)</i></label>
+ <textarea name="notes" rows="2"></textarea>
+ <label class="chk"><input type="checkbox" id="consent" required><span data-ar="أوافق على استخدام بياناتي لأغراض التوظيف في MC Men's Club والتواصل معي بشأن طلبي." data-en="I agree that MC Men's Club may use my data for recruitment and contact me about my application.">أوافق على استخدام بياناتي لأغراض التوظيف في MC Men's Club والتواصل معي بشأن طلبي.</span></label>
+ <div id="msg"></div>
+</section>
+
+<div class="nav">
+ <button type="button" class="s hide" id="back" data-ar="السابق" data-en="Back">السابق</button>
+ <button type="button" class="p" id="next" data-ar="التالي" data-en="Next">التالي</button>
+</div>
+</form>
+
+<div class="done hide" id="done">
+ <div class="confirm" id="confirm">
+  <div class="confirm-badge">✅</div>
+  <h2 class="confirm-title" data-ar="تم تسجيل طلبك بنجاح" data-en="Your application has been registered">تم تسجيل طلبك بنجاح</h2>
+  <p class="confirm-text" data-ar="سيتم التواصل معك من فريق الموارد البشرية قريباً." data-en="Our HR team will contact you shortly.">سيتم التواصل معك من فريق الموارد البشرية قريباً.</p>
+  <div class="confirm-divider"></div>
+  <p class="confirm-thanks" data-ar="شكراً على وقتك" data-en="Thank you for your time">شكراً على وقتك</p>
+  <p class="confirm-sign" data-ar="فريق الموارد البشرية | MC Men's Club" data-en="HR Team | MC Men's Club">فريق الموارد البشرية | MC Men's Club</p>
+ </div>
+ <div class="doc hide" id="doc">
+  <div class="doc-top">
+   <div class="doc-photo"><span>📷 صورة شخصية / Photo</span><img id="docPhoto" class="hide" alt=""></div>
+   <div class="doc-titles">
+    <img class="doc-logo" id="docLogo" alt="MC Men's Club">
+    <h2 data-ar="طلب تقديم وظيفي" data-en="EMPLOYMENT APPLICATION">طلب تقديم وظيفي</h2>
+    <p data-ar="MC Men's Club — نسخة للمتقدم" data-en="MC MEN'S CLUB — applicant copy">MC Men's Club — نسخة للمتقدم</p>
+   </div>
+  </div>
+  <div class="doc-meta">
+   <div><span>🆔 رقم الطلب / Application no.</span><b id="appRef">—</b></div>
+   <div><span>📅 تاريخ التقديم / Submitted on</span><b id="appDate">—</b></div>
+   <div><span>⏳ حالة الطلب / Status</span><b class="st" id="appStatus">قيد المراجعة / Under review</b></div>
+  </div>
+  <div id="report"></div>
+  <div class="decl">
+   <h4>📋 الإقرار / DECLARATION</h4>
+   <p data-ar="أقر بأن جميع البيانات الواردة أعلاه صحيحة، وأوافق على استخدامها من قبل MC Men's Club لأغراض التوظيف والتواصل معي بشأن طلبي." data-en="I confirm that the information above is true and agree to its use by MC Men's Club for recruitment purposes and to contact me about my application.">أقر بأن جميع البيانات الواردة أعلاه صحيحة، وأوافق على استخدامها من قبل MC Men's Club لأغراض التوظيف والتواصل معي بشأن طلبي.</p>
+  </div>
+  <div class="sigs">
+   <div><span>✍️ توقيع المتقدم / Applicant signature</span><i></i></div>
+   <div><span>✅ تم المراجعة بواسطة / Reviewed by</span><i></i></div>
+  </div>
+  <div class="hrbox">
+   <div class="hrbox-h" data-ar="للاستخدام الداخلي — الموارد البشرية" data-en="FOR HR USE ONLY">للاستخدام الداخلي — الموارد البشرية</div>
+   <div class="hrbox-g">
+    <div><span data-ar="تاريخ المقابلة" data-en="Interview date">تاريخ المقابلة</span><i></i></div>
+    <div><span data-ar="النتيجة" data-en="Result">النتيجة</span><i></i></div>
+    <div><span data-ar="ملاحظات" data-en="Remarks">ملاحظات</span><i></i></div>
+    <div><span data-ar="التوقيع" data-en="Signature">التوقيع</span><i></i></div>
+   </div>
+  </div>
+ </div>
+ <p class="thanks hide" data-ar="شكراً، طلبك اتسجل ✅ — فريق الموارد البشرية هيراجع بياناتك ويتواصل معاك قريباً." data-en="Thank you, your application is in ✅ — Our HR team will review your details and contact you soon.">شكراً، طلبك اتسجل ✅ — فريق الموارد البشرية هيراجع بياناتك ويتواصل معاك قريباً.</p>
+ <div class="nav">
+  <button type="button" class="s" id="againBtn" data-ar="تقديم طلب جديد" data-en="New application">تقديم طلب جديد</button>
+  <button type="button" class="p hide" id="printBtn" data-ar="🖨️ طباعة / حفظ PDF" data-en="🖨️ Print / Save as PDF">🖨️ طباعة / حفظ PDF</button>
+ </div>
+</div>
+</div>
+
+<script>
+/* ====== اضبط القيمة دي ====== */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybru-h_rFahbguIgfwQndnt_UYAGShyfsr9GJj1TwGtmi8awV4NB59WwONA5LIhl4cEw/exec";
+/* =============================== */
+/* ⏸️ وضع الاختبار: false = التحقق من الحقول مطلوب.
+   الإرسال بيتم دايمًا لخزنة الداشبورد المحلية، ولو SCRIPT_URL مضبوط بيتبعت للسيرفر كمان. */
+const TEST = false;
+const LOCAL_KEY = "hr_inbox_v1";
+/* =============================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const f=$("#f"), steps=$$(".step"), bars=$$("#bar i");
+let cur=0, lang="ar", map, marker, geocoder, lastData=null, lastRef="";
+
+/* اللغة */
+function setLang(l){
+  lang=l; document.documentElement.lang=l; document.documentElement.dir=l==="ar"?"rtl":"ltr";
+  $$("[data-ar]").forEach(e=>e.textContent=e.dataset[l]);
+  $("#langBtn").textContent=l==="ar"?"English":"عربي"; f.elements.lang.value=l;
+  if(lastData&&!$("#done").classList.contains("hide"))renderReport(lastData);
+}
+$("#langBtn").onclick=()=>setLang(lang==="ar"?"en":"ar");
+setLang("ar");
+
+/* الفرع من الرابط ?branch= */
+/* الفرع والوظيفة من الرابط أو الـ QR: ?branch=Maadi&pos=Sales */
+/* ===== Ø£Ù‚Ø±Ø¨ ÙØ±Ø¹ Ù„Ù„Ù…ØªÙ‚Ø¯Ù… Ù…Ù† Ø¥Ø­Ø¯Ø§Ø«ÙŠØ§ØªÙ‡ (Ø®Ø±Ø§Ø¦Ø· Ø¬ÙˆØ¬Ù„) ===== */
+
+const BRANCH_GOV=[["{Tanta}","الغربية","Gharbia"],["10Th Of Ramadan","الشرقية","Sharqia"],["Abbas El Akkad 1","القاهرة","Cairo"],["Abbas El Akkad 2","القاهرة","Cairo"],["Abo Kbeer","الدقهلية","Dakahlia"],["Aboul Matameer","البحيرة","Beheira"],["Ain Shams","القاهرة","Cairo"],["Al Agamy","الإسكندرية","Alexandria"],["Al Wasta","بني سويف","Beni Suef"],["Alexander","الإسكندرية","Alexandria"],["Ashmoon","القليوبية","Qalyubia"],["Aswan","أسوان","Aswan"],["Asyut 1","أسيوط","Asyut"],["Asyut 2","أسيوط","Asyut"],["Bagour","القليوبية","Qalyubia"],["Banha","القليوبية","Qalyubia"],["Bani Mazar","المنيا","Minya"],["Bani Suef 1","بني سويف","Beni Suef"],["Bani Suif 2","بني سويف","Beni Suef"],["Belqas","الدقهلية","Dakahlia"],["Carrefour","القاهرة","Cairo"],["City Mall Shubra","القاهرة","Cairo"],["Club5","القاهرة","Cairo"],["Damanhur 1","البحيرة","Beheira"],["Damanhur 2","البحيرة","Beheira"],["Damietta","دمياط","Damietta"],["Damietta Sq","دمياط","Damietta"],["Dekernes","الدقهلية","Dakahlia"],["Desouk 2","البحيرة","Beheira"],["Diarb Negm","الشرقية","Sharqia"],["Dokki","الجيزة","Giza"],["Fayoum 1","الفيوم","Fayoum"],["Fayoum 2","الفيوم","Fayoum"],["Faysal","الجيزة","Giza"],["Gnena Mall","القاهرة","Cairo"],["Hadaeq Al Qubbah","القاهرة","Cairo"],["Haram","الجيزة","Giza"],["Hurghada","البحر الأحمر","Red Sea"],["Ismaelia 2","الإسماعيلية","Ismailia"],["Itay Al Barud","البحيرة","Beheira"],["Kafr El Dawar","الإسكندرية","Alexandria"],["Kafr El Sheikh","كفر الشيخ","Kafr El Sheikh"],["Kafr El Sheikh 2","كفر الشيخ","Kafr El Sheikh"],["Kafr El Zayat","الغربية","Gharbia"],["Komombo","أسوان","Aswan"],["Luxor 1","الأقصر","Luxor"],["Luxor 2","الأقصر","Luxor"],["Maadi","الجيزة","Giza"],["Madinaty","القاهرة","Cairo"],["Maghagha","بني سويف","Beni Suef"],["Mahalla","الدقهلية","Dakahlia"],["Malawy","بني سويف","Beni Suef"],["Mall Of Arabia","الجيزة","Giza"],["Mall Of Egypt","الجيزة","Giza"],["Mansoura 1","الدقهلية","Dakahlia"],["Mansoura 2","الدقهلية","Dakahlia"],["Mansoura 3","الدقهلية","Dakahlia"],["Mansoura 4","الدقهلية","Dakahlia"],["Mataria","القاهرة","Cairo"],["Meet Ghamr","الغربية","Gharbia"],["Menia 2","المنيا","Minya"],["Menia El Kamh","الشرقية","Sharqia"],["Menia Etab","المنيا","Minya"],["Menouf 2","المنوفية","Menoufia"],["Miami","القاهرة","Cairo"],["Mohandseen","القاهرة","Cairo"],["Mokattam","القاهرة","Cairo"],["Nagaa Hammadi","قنا","Qena"],["New Damietta","دمياط","Damietta"],["October","الجيزة","Giza"],["October Outlet","الجيزة","Giza"],["Port Said 1","بورسعيد","Port Said"],["Qalyub","القاهرة","Cairo"],["Qena 2","قنا","Qena"],["Quesna","القليوبية","Qalyubia"],["Rashid","البحيرة","Beheira"],["Roxy","القاهرة","Cairo"],["Sadat","المنوفية","Menoufia"],["Safia Zaghlol","الإسكندرية","Alexandria"],["Sharm El Sheikh","جنوب سيناء","South Sinai"],["Shebeen El Koom 2","المنوفية","Menoufia"],["Shebeen El Koom 3","المنوفية","Menoufia"],["Shebeen El Qanater 2","القليوبية","Qalyubia"],["Sherbeen","الدقهلية","Dakahlia"],["Shubra El Khema 2","القاهرة","Cairo"],["Shubra El Khema 3","القاهرة","Cairo"],["Shubra Street 1","القاهرة","Cairo"],["Shubra Street 2","القاهرة","Cairo"],["Sohag 1","سوهاج","Sohag"],["Sohag 2","سوهاج","Sohag"],["Stock","الجيزة","Giza"],["Suez","السويس","Suez"],["Talaat Harb","الغربية","Gharbia"],["Tanta Mall 2","الغربية","Gharbia"],["Zagazig 1","الشرقية","Sharqia"],["Zagazig 2","الشرقية","Sharqia"],["Zagazig 3","الشرقية","Sharqia"],["Zahraa Nasr City","القاهرة","Cairo"],["Arabella Plaza Mall","القاهرة","Cairo"],["Bani Mazar 2","المنيا","Minya"],["Elsheikh Zayed","الجيزة","Giza"],["Golf City Mall","القاهرة","Cairo"],["Maxim Mall","القاهرة","Cairo"],["New Maadi","القاهرة","Cairo"],["New Mohandseen","الجيزة","Giza"],["New Mokattam","القاهرة","Cairo"],["Shebein Space Mall","المنوفية","Menoufia"],["Tanta","الغربية","Gharbia"],["Zahraa C3 Mall","القاهرة","Cairo"]];
+
+function buildBranchSelect(){
+  const sel=document.getElementById("branch");
+  if(!sel)return;
+  const groups={};
+  BRANCH_GOV.forEach(x=>{(groups[x[1]]=groups[x[1]]||{en:x[2],list:[]}).list.push(x[0])});
+  const keys=Object.keys(groups).sort((a,b)=>{
+    if(a==="أخرى")return 1; if(b==="أخرى")return -1;
+    return groups[b].list.length-groups[a].list.length || a.localeCompare(b,"ar");
+  });
+  sel.innerHTML="";
+  const ph=document.createElement("option"); ph.value=""; ph.textContent="اختر المحافظة والفرع / Select governorate & branch"; sel.appendChild(ph);
+  keys.forEach(k=>{
+    const g=document.createElement("optgroup"); g.label=k+" / "+groups[k].en;
+    groups[k].list.slice().sort().forEach(n=>{
+      const o=document.createElement("option"); o.value=n; o.textContent=n; g.appendChild(o);
+    });
+    sel.appendChild(g);
+  });
+}
+buildBranchSelect();
+let BR_AUTO=true;
+function havKm2(a,b,c,d){const R=6371,rd=Math.PI/180,p=a*rd,q=c*rd,dp=(c-a)*rd,dl=(d-b)*rd;
+ const z=Math.sin(dp/2)**2+Math.cos(p)*Math.cos(q)*Math.sin(dl/2)**2;
+ return 2*R*Math.asin(Math.min(1,Math.sqrt(z)))}
+function nearestBranch(lat,lng){
+ if(!isFinite(lat)||!isFinite(lng))return null;
+ const a=BRANCH_GEO.map(g=>({n:g[0],km:havKm2(lat,lng,g[1],g[2])}));
+ a.sort((x,y)=>x.km-y.km);
+ return a[0]||null;
+}
+function autoBranch(){
+ const la=parseFloat(f.lat.value),ln=parseFloat(f.lng.value),hint=$("#nearHint"),inp=$("#branch");
+ const n=nearestBranch(la,ln);
+ if(!n){if(hint)hint.textContent="";return}
+ const dist=n.km<1?Math.round(n.km*1000)+" m":n.km.toFixed(1)+" km";
+ if(hint)hint.innerHTML=T("ðŸ¢ Ø£Ù‚Ø±Ø¨ ÙØ±Ø¹ Ù„Ùƒ: ","ðŸ¢ Nearest branch: ")+"<b>"+n.n+"</b> Â· "+dist+
+  ' Â· <a href="https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(la+","+ln)+'" target="_blank" rel="noopener">ðŸ—ºï¸ '+T("Ø§Ù„Ø§ØªØ¬Ø§Ù‡Ø§Øª","Directions")+'</a>'+
+  ' Â· <button type="button" class="lnkbtn" id="useNear">'+T("Ø§Ø³ØªØ®Ø¯Ù…Ù‡","Use it")+'</button>';
+ if(!inp.value||BR_AUTO){inp.value=n.n;BR_AUTO=true;inp.classList.add("fromlink")}
+ const ub=$("#useNear");if(ub)ub.onclick=()=>{inp.value=n.n;inp.classList.add("fromlink")};
+}
+const qp=new URLSearchParams(location.search);
+const b=(qp.get("b")||qp.get("branch")||"").replace(/-/g," ").trim();
+const pLink=(qp.get("pos")||qp.get("position")||qp.get("job")||"").trim();
+const POS_LABEL={Sales:"سيلز","Deputy Manager":"نائب مدير",Manager:"مدير"};
+function tagLink(){
+ const t=$("#branchTag"),parts=[];
+ if(b)parts.push("📍 "+b);
+ if(pLink)parts.push("💼 "+(POS_LABEL[pLink]||pLink));
+ if(parts.length){t.textContent=parts.join(" · ")+" ✅";t.classList.remove("hide")}
+}
+function fillPositions(list){
+ if(!Array.isArray(list)||!list.length)return;
+ const sel=f.elements.position,cur=sel.value,L=POS_LABEL;
+ sel.innerHTML="";
+ const o0=document.createElement("option");o0.value="";o0.dataset.ar="اختر الوظيفة";o0.dataset.en="Select a position";o0.textContent=lang==="ar"?o0.dataset.ar:o0.dataset.en;sel.appendChild(o0);
+ list.forEach(x=>{const o=document.createElement("option");o.value=x;o.dataset.ar=L[x]||x;o.dataset.en=x;o.textContent=lang==="ar"?o.dataset.ar:o.dataset.en;sel.appendChild(o)});
+ sel.value=cur||pLink||"";
+}
+if(b){const _s=$("#branch");if(b&&![..._s.options].some(o=>o.value===b)){const _g=document.createElement("optgroup");_g.label="أخرى / Other";const _o=document.createElement("option");_o.value=b;_o.textContent=b;_g.appendChild(_o);_s.appendChild(_g)}_s.value=b;_s.classList.add("fromlink");BR_AUTO=false}
+if(pLink)f.elements.position.value=pLink;
+try{fillPositions(JSON.parse(localStorage.getItem("hrpositions")||"[]"))}catch(e){}
+if(pLink)f.elements.position.value=pLink;
+tagLink();
+if(linkHosted()&&google.script.run.getPositions){
+ google.script.run.withSuccessHandler(list=>{fillPositions(list);if(pLink)f.elements.position.value=pLink}).withFailureHandler(()=>{}).getPositions();
+}
+
+/* أدوات */
+const dig=s=>s.replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+["nid","phone","whatsapp","gradYear","salary"].forEach(n=>f[n].addEventListener("input",e=>e.target.value=dig(e.target.value)));
+$("#hasExp").onchange=e=>$("#expBox").classList.toggle("hide",e.target.value!=="Yes");
+/* المؤهل = طالب؟ يظهر سؤال الفرقة، غير كده تظهر سنة التخرج */
+$("#edu").onchange=e=>{
+  const st=e.target.value==="Student";
+  $("#yearBox").classList.toggle("hide",!st);
+  $("#gradBox").classList.toggle("hide",st);
+  if(st)f.elements.gradYear.value="";else f.elements.year.value="";
+};
+/* النوع = ذكر/أنثى؟ يحدّد صيغة الحالة الاجتماعية (أعزب ↔ عزباء، متزوج ↔ متزوجة) */
+function syncMarital(){
+  const g=f.elements.gender.value, sel=f.elements.marital, keep=sel.value;
+  [...sel.options].forEach(o=>{
+    if(o.dataset.arBoth===undefined)return; /* الخيار الفاضي مش بيتحدّث */
+    o.dataset.ar = g==="Male"?o.dataset.arM : g==="Female"?o.dataset.arF : o.dataset.arBoth;
+    o.textContent = lang==="ar"?o.dataset.ar:o.dataset.en;
+  });
+  sel.value=keep; /* احتفظ باختيار المستخدم */
+}
+f.elements.gender.onchange=syncMarital;
+/* رفع الصورة: بتتصغَر وتتحوّل base64 عشان الحجم يفضل صغير في الإرسال */
+$("#photo").onchange=e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file){f.elements.photoData.value="";$("#photoPrev").classList.add("hide");return}
+  const fr=new FileReader();
+  fr.onload=()=>{
+    const im=new Image();
+    im.onload=()=>{
+      const s=Math.min(1,600/im.width,800/im.height);
+      const w=Math.round(im.width*s),h=Math.round(im.height*s);
+      const c=document.createElement("canvas");c.width=w;c.height=h;
+      c.getContext("2d").drawImage(im,0,0,w,h);
+      const url=c.toDataURL("image/jpeg",.82);
+      f.elements.photoData.value=url;
+      $("#photoPrev").src=url;$("#photoPrev").classList.remove("hide");
+    };
+    im.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+};
+const T=(a,e)=>lang==="ar"?a:e;
+
+/* ===== فحص الربط من غير ما تملأ الاستمارة ===== */
+function linkHosted(){return typeof google!=="undefined"&&google.script&&google.script.run}
+async function pingLink(){
+ if(linkHosted()){
+  return await new Promise(res=>{try{google.script.run.withSuccessHandler(r=>res(r||null)).withFailureHandler(()=>res(null)).ping()}catch(e){res(null)}});
+ }
+ if(/^https:\/\/script\.google/.test(SCRIPT_URL)){
+  try{const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"ping"})});if(!r.ok)return null;return await r.json()}catch(e){return null}
+ }
+ return null;
+}
+async function setConn(){
+ const chip=$("#connChip");if(!chip)return null;
+ chip.textContent=T("⏳ بنفحص الربط...","⏳ Checking...");chip.className="connchip";
+ const p=await pingLink();
+ if(p&&p.ok){chip.textContent=T("🟢 متصل بالسيرفر","🟢 Server connected");chip.className="connchip on";return p}
+ chip.textContent=T("🟡 محلي — نفس الجهاز فقط","🟡 Local — same device only");chip.className="connchip local";return null;
+}
+$("#testBtn").onclick=async()=>{
+ const m=$("#connMsg"),btn=$("#testBtn");if(!m)return;
+ m.classList.remove("hide");m.style.color="#666";m.textContent=T("⏳ بنختبر الربط...","⏳ Testing the connection...");btn.disabled=true;
+ const p=await setConn();
+ if(p&&p.ok){
+  m.style.color="#0f5132";
+  m.textContent=T("✅ الربط شغال — الاستمارة متصلة بالسيرفر، وأي طلب جديد هيظهر في الداشبورد على طول."+(p.rows!=null?" ("+p.rows+" طلب مسجل)":""),"✅ Connected — applications will appear in the dashboard right away."+(p.rows!=null?" ("+p.rows+" saved)":""));
+ }else{
+  m.style.color="#8a5a00";
+  m.textContent=T("🟡 مفيش سيرفر مربوط — الطلبات بتتحفظ على نفس الجهاز/المتصفح بس. لو محتاجها من الموبايل وأجهزة تانية استخدم نسخة Google Apps Script.","🟡 No server connected — saved on this device/browser only. Use the Google Apps Script version for all devices.");
+ }
+ btn.disabled=false;
+};
+setConn();
+$("#langBtn").addEventListener("click",()=>setTimeout(setConn,0));
+$("#demoBtn").onclick=async()=>{
+ const m=$("#connMsg"),btn=$("#demoBtn");if(!m)return;
+ m.classList.remove("hide");m.style.color="#666";m.textContent=T("⏳ بنبعت طلب تجريبي...","⏳ Sending a test application...");btn.disabled=true;
+ const ref="TEST-"+String(Date.now()).slice(-6);
+ const data={branch:"Miami",position:"Sales",name:"طلب تجريبي للربط",gender:"Male",dob:"1995-01-01",
+  nid:"29501011201234",marital:"Single",military:"Completed",phone:"01000000000",whatsapp:"",email:"",
+  address:"",lat:"",lng:"",edu:"Bachelor",major:"—",year:"",gradYear:"2020",hasExp:"No",
+  startWhen:"Immediately",shifts:"Yes",salary:"",source:"Other",notes:"TEST",lang:lang,
+  submittedAt:new Date().toISOString(),ref:ref,Status:"New",entry:"Direct link"};
+ saveLocal(data);
+ if(linkHosted()){
+  try{await new Promise(res=>{google.script.run.withSuccessHandler(res).withFailureHandler(res).submitApplication(data)})}catch(e){}
+ }
+ m.style.color="#0f5132";
+ m.textContent=T("✅ اتبعت طلب تجريبي رقم "+ref+" — افتح الداشبورد هتلاقيه أول الطلبات.","✅ Test application "+ref+" sent — check the dashboard.");
+ btn.disabled=false;
+};
+
+/* التحقق */
+function validate(i){
+  if(TEST)return true; /* ⏸️ وضع الاختبار: عبور من غير أي تحقق */
+  let ok=true,msg="";
+  $$(".step")[i].querySelectorAll("input[required],select[required]").forEach(el=>{
+    let bad=el.type==="checkbox"?!el.checked:!el.value.trim();
+    if(el.name==="nid"&&!/^\d{14}$/.test(el.value)) bad=true;
+    if(el.name==="phone"&&!/^01[0125]\d{8}$/.test(el.value)) bad=true;
+    if(el.name==="name"&&el.value.trim().split(/\s+/).length<3) bad=true;
+    el.classList.toggle("bad",bad); if(bad)ok=false;
+  });
+  const w=f.whatsapp.value; if(i===1&&w&&!/^01[0125]\d{8}$/.test(w)){f.whatsapp.classList.add("bad");ok=false}
+  if(!ok&&!msg)msg=T("راجع الحقول المظللة بالأحمر.","Please check the fields marked in red.");
+  $("#msg").textContent=ok?"":msg; if(!ok)alert(msg); return ok;
+}
+function show(i){
+  cur=i;steps.forEach((s,k)=>s.classList.toggle("on",k===i));bars.forEach((x,k)=>x.classList.toggle("on",k<=i));
+  $("#back").classList.toggle("hide",i===0);
+  $("#next").textContent=i===3?T("إرسال الطلب","Submit application"):T("التالي","Next");
+  $("#next").dataset.ar=i===3?"إرسال الطلب":"التالي";$("#next").dataset.en=i===3?"Submit application":"Next";
+  window.scrollTo({top:0,behavior:"smooth"}); 
+  if(i===1&&map)setTimeout(()=>map.invalidateSize(),80);
+}
+$("#back").onclick=()=>show(cur-1);
+/* رقم طلب فريد + حفظ الطلب في خزنة الداشبورد المحلية */
+function refNew(){const d=new Date(),p=n=>String(n).padStart(2,"0");
+ return "MC-"+String(d.getFullYear()).slice(2)+p(d.getMonth()+1)+p(d.getDate())+"-"+String(1000+Math.floor(Math.random()*9000))}
+function saveLocal(data){
+ data.ref=data.ref||refNew();
+ data.Status=data.Status||"New";
+ data.ResponsibleHR=data.ResponsibleHR||"";
+ let a=[];try{a=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]")}catch(e){a=[]}
+ if(!Array.isArray(a))a=[];
+ a=a.filter(x=>x&&x.ref!==data.ref);a.unshift(data);
+ const put=arr=>localStorage.setItem(LOCAL_KEY,JSON.stringify(arr));
+ try{put(a.slice(0,40))}
+ catch(e){
+  try{put(a.slice(0,20).map((x,i)=>i?x:Object.assign({},x,{photoData:""})))}catch(e2){}
+ }
+ lastRef=data.ref;
+ try{const bc=new BroadcastChannel("hr_inbox");bc.postMessage({type:"new",ref:data.ref});bc.close()}catch(e){}
+}
+function finish(data){
+ lastData=data;
+ lastRef=data.ref||("MC-"+data.submittedAt.slice(0,10).replace(/-/g,"")+"-"+String(Math.floor(1000+Math.random()*9000)));
+ renderReport(lastData);
+ document.body.classList.add("submitted");
+ f.classList.add("hide");$("#bar").classList.add("hide");$("#done").classList.remove("hide");window.scrollTo(0,0);
+}
+$("#next").onclick=async()=>{
+ if(!validate(cur))return;
+ if(cur<3)return show(cur+1);
+ const btn=$("#next");btn.disabled=true;btn.textContent="...";
+ const data=Object.fromEntries(new FormData(f));data.submittedAt=new Date().toISOString();data.ref=refNew();
+ saveLocal(data);
+ /* لو الاستمارة شغالة جوه Google Apps Script — الإرسال للسيرفر مباشرة */
+ if(typeof google!=="undefined"&&google.script&&google.script.run){
+  await new Promise(res=>{try{google.script.run.withSuccessHandler(res).withFailureHandler(res).submitApplication(data)}catch(e){res(null)}});
+ }else if(/^https:\/\/script\.google/.test(SCRIPT_URL)){
+  try{await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)})}catch(e){}
+ }
+ finish(data);
+};
+
+/* ===== العنوان والموقع (شبه أوبر): اقتراحات + دبوس على الخريطة + عكس الجيوكودينج ===== */
+const BRANCH_GEO=[["{Tanta}",30.797077,31.00309,"https://maps.app.goo.gl/b2E9YyKxzrgwLXzt8?g_st=ic"],["10Th Of Ramadan",30.2946854,31.77141,"https://goo.gl/maps/x8hw5DrmtUarC3bJ8"],["Abbas El Akkad 1",30.0566561,31.3375882,"https://goo.gl/maps/Q6726kRGGcfj3oU66"],["Abbas El Akkad 2",30.0566673,31.3381326,"https://maps.app.goo.gl/iwxz9AVQkEj9pp1u6"],["Abo Kbeer",31.1167,31.5167,"https://maps.app.goo.gl/TyPyYxkoNsJXBGm28"],["Aboul Matameer",30.9115105,30.1748104,"https://goo.gl/maps/VWNTVbX7qMU3vH9VA"],["Ain Shams",30.128624,31.3211765,"https://goo.gl/maps/ATruD7VpG6yGZoFY6"],["Al Agamy",31.1218815,29.7856388,"https://goo.gl/maps/Aju1mtZJj3V5BzjG7"],["Al Wasta",29.339817,31.2086449,"https://goo.gl/maps/hFjnEX16LX6aS61v7"],["Alexander",31.2661304,29.9968662,"https://goo.gl/maps/KwSadU56dkZHKZZK8"],["Ashmoon",30.2739372,30.9628849,"https://goo.gl/maps/CuEbYbmANVbypUq86"],["Aswan",24.0902368,32.8954829,"https://goo.gl/maps/Mw2XNVh9weeueLbT7"],["Asyut 1",27.181879,31.1839294,"https://goo.gl/maps/q5tEDWsDY25GAJEQ9"],["Asyut 2",27.181795,31.18387,"https://maps.google.com/?q=27.181795,31.183870"],["Bagour",30.4291344,31.0367222,"https://goo.gl/maps/XtAbeU1HbXE1MufHA"],["Banha",30.4704895,31.1814098,"https://goo.gl/maps/sWgVNxEvSrvfvbqp9"],["Bani Mazar",28.4916998,30.8026155,"https://maps.app.goo.gl/NHffebrKrySbQwBa6"],["Bani Suef 1",29.0708889,31.1018333,"https://goo.gl/maps/wzXwFDuWCvhkC9iq5"],["Bani Suif 2",29.0698338,31.1040325,"https://goo.gl/maps/orv7cRfPHh2PPMNXA"],["Belqas",31.2155647,31.3563061,"https://goo.gl/maps/abNfAH9e3qqh1UFE8"],["Carrefour",29.9821529,31.316267,"https://goo.gl/maps/Udutb6t4pSYuDTgN8"],["City Mall Shubra",30.1226033,31.2506939,"https://www.google.com/maps/place/30%C2%B007'21.4%22N+31%C2%B015'02.5%22E/@30.1226033,31.248119,17z/data=!3m1!4b1!4m4!3m3!8m2!3d30.1226033!4d31.2506939?hl=en&entry=ttu"],["Club5",30.0510502,31.2407475,"https://goo.gl/maps/ry9dH7R9XGDBcSYU7"],["Damanhur 1",31.0326042,30.4515438,"https://goo.gl/maps/i5PNGBnNaSxjiwDV8"],["Damanhur 2",31.0446053,30.4674606,"https://goo.gl/maps/N9x6ve2wrKesB7UXA"],["Damietta",31.4104791,31.8123604,"https://www.google.com/maps/place/31%C2%B024'37.7%22N+31%C2%B048'44.5%22E/@31.4104791,31.8145491,17z/data=!3m1!4b1!4m4!3m3!8m2!3d31.4104791!4d31.8123604?hl=ar&entry=ttu&g_ep=EgoyMDI0MTExMy4xIKXMDSoASAFQAw%3D%3D"],["Damietta Sq",31.4138684,31.8114481,"https://www.google.com/maps?q=31.4138684,31.8114481&z=17&hl=ar"],["Dekernes",31.0832787,31.6027927,"https://goo.gl/maps/tNecvyh9PdwAASwC9"],["Desouk 2",31.1314726,30.6439303,"https://goo.gl/maps/mR4d8wUCi3Z1dpgj9"],["Diarb Negm",30.7553101,31.4583549,"https://goo.gl/maps/wgsi7j59CoppFhbM8"],["Dokki",30.040205001831055,31.200889587402344,"https://maps.google.com/maps?q=30.040205001831055%2C31.200889587402344&z=17&hl=en"],["Fayoum 1",29.3148308,30.8525867,"https://goo.gl/maps/UoGN8Seyww6fcVsw5"],["Fayoum 2",29.3149185,30.8526287,"https://goo.gl/maps/8sQwT5hBDoYpeb2h8"],["Faysal",29.9949722,31.1500511,"https://goo.gl/maps/P7Auq1TsLfi9YjMi6"],["Gnena Mall",30.0611216,31.3326836,"https://maps.app.goo.gl/8TAQyrBgJS2VrGkD9?g_st=ic"],["Hadaeq Al Qubbah",30.0859814,31.2840462,"https://goo.gl/maps/hztb5uq2Y5Tm1GEh7"],["Haram",29.9891173,31.147235,"https://goo.gl/maps/BbbT6BuMkJ2C35Sd6"],["Hurghada",27.213129,33.8400421,"https://goo.gl/maps/vJRcFb5S62JXarsAA"],["Ismaelia 2",30.6052108,32.26027,"https://maps.app.goo.gl/2m6p5cVVngXFEqg77"],["Itay Al Barud",30.8828333,30.6663333,"https://goo.gl/maps/Bm2aJvPs7XKwyoHw9"],["Kafr El Dawar",31.1295662,30.1243153,"https://goo.gl/maps/cpCmrqL7SbVUXhkn9"],["Kafr El Sheikh",31.3814765,30.8513566,""],["Kafr El Sheikh 2",31.1132717,30.9442989,"https://www.google.com/maps/place/31%C2%B006'47.8%22N+30%C2%B056'39.5%22E/@31.1132717,30.9464876,17z/data=!3m1!4b1!4m4!3m3!8m2!3d31.1132717!4d30.9442989?hl=ar&entry=ttu&g_ep=EgoyMDI1MDEyMi4wIKXMDSoASAFQAw%3D%3D"],["Kafr El Zayat",30.8216013,30.8191339,"https://goo.gl/maps/AwEBGVgMSbvqP26f7"],["Komombo",24.475298,32.948757,"https://goo.gl/maps/XHrr8DFnXoA5f7t27"],["Luxor 1",25.69375,32.6398611,"https://goo.gl/maps/aAnNrQ328ffacAhP8"],["Luxor 2",25.6872431,32.6396357,"n: https://goo.gl/maps/MdSzGP4xxA5Au7BE9"],["Maadi",29.9753494,31.2817116,"https://goo.gl/maps/tfTGx5AbQ7jd84D29"],["Madinaty",30.0778861,31.6653139,"https://www.google.com/maps?q=30.0778861,31.6653139&z=17&hl=ar"],["Maghagha",28.649237,30.841021,"https://maps.google.com/?q=28.649237,30.841021"],["Mahalla",30.9766746,31.1743062,"https://goo.gl/maps/yKrfqatViiqpUNLp8"],["Malawy",28.8365,30.7436,"https://her.is/2Sgfhj3"],["Mall Of Arabia",30.0064722,30.9723056,"https://goo.gl/maps/NHgth59f9ZSHNhEXA"],["Mall Of Egypt",29.9715519,31.0181675,"https://maps.app.goo.gl/gYG8yABLGYh9a7eb9"],["Mansoura 1",31.0327148,31.3630276,"https://goo.gl/maps/GgiQLaV31VWkundQ6"],["Mansoura 2",31.0457802,31.354353,"https://goo.gl/maps/6fiUvvvVXzvcKDTY9"],["Mansoura 3",31.0520458,31.4057083,"https://goo.gl/maps/KYMMUQMmxbQuwsAJ8"],["Mansoura 4",31.0409483,31.3784704,"https://maps.app.goo.gl/yHgikecSkfmv68nf7"],["Mataria",30.1249325,31.3118197,"https://goo.gl/maps/93UQhuM6TJ2dKBzS6"],["Meet Ghamr",30.7179394,31.2531662,"https://goo.gl/maps/iTh6q3n9M8P7gSXy9"],["Menia 2",28.1112919,30.7499237,"https://goo.gl/maps/kr3cfUV3nHaHqQJo9"],["Menia El Kamh",30.5197419,31.3537019,"https://goo.gl/maps/LDWkk1X6zUaCpv6r6"],["Menia Etab",28.113203,30.7490416,"https://www.google.com/maps?q=28.113203,30.7490416&z=17&hl=ar"],["Menouf 2",30.4669495,30.9317913,"https://goo.gl/maps/saEyjiWK1TKyZVTY8"],["Miami",30.051536,31.240504,"https://goo.gl/maps/PG9xRGjtGG4c9q6M8"],["Mohandseen",30.0553761,31.1956253,"https://goo.gl/maps/cyUZBj2Eoj3C7dkk7"],["Mokattam",30.0159702,31.2813263,"https://goo.gl/maps/unmCoKAUJR8SGjs4A"],["Nagaa Hammadi",26.048,32.2391111,"https://goo.gl/maps/s6KUiVRqqnW6V7nu7"],["New Damietta",31.434103,31.6823997,"https://www.google.com/maps/place/31%C2%B026'02.8%22N+31%C2%B040'56.6%22E/@31.434103,31.680211,17z/data=!3m1!4b1!4m5!3m4!1s0x0:0x0!8m2!3d31.434103!4d31.6823997?q=31.43410301208496,31.68239974975586&z=17&hl=en&shorturl=1"],["October",29.9744053,30.9481754,"https://goo.gl/maps/icw7U11pCHoP5Fsh7"],["October Outlet",29.9366245,30.8963852,"https://goo.gl/maps/gUYn9xHJLtQxiAE66"],["Port Said 1",31.2708054,32.303154,"https://goo.gl/maps/QZ4tDFioZN3e2nuP6"],["Qalyub",30.1807778,31.2205278,"https://goo.gl/maps/STaHUXEjF4qJpDpZ8"],["Qena 2",26.1598805,32.723428,"https://www.google.com/maps?q=26.1598805,32.723428&z=17&hl=ar"],["Quesna",30.548008,31.1359901,"https://goo.gl/maps/7QutCU3GU1kPK3ap9"],["Rashid",31.4065952,30.4239063,"https://goo.gl/maps/Cyvfga6pB8Xp9y296"],["Roxy",30.0925671,31.3156596,"https://goo.gl/maps/AxuzsKWE25cks9Ax5"],["Sadat",30.3644772,30.5092354,"https://goo.gl/maps/MBsKZsudPjfVwL7j8"],["Safia Zaghlol",31.1990776,29.9025078,"https://goo.gl/maps/z83Vtm4QWBgiPqbF9"],["Sharm El Sheikh",27.9086722,34.3195797,"https://goo.gl/maps/u4JZeGE28fwfAYyp8"],["Shebeen El Koom 2",30.5701944,31.0070278,"https://goo.gl/maps/dxiuKUjSX3BM4DDG7"],["Shebeen El Koom 3",30.5629545,31.0075929,"https://www.google.com/maps?q=30.5629545,31.0075929&z=17&hl=ar"],["Shebeen El Qanater 2",30.3119392,31.3159904,"https://goo.gl/maps/mahURNeVm24i3N1r9"],["Sherbeen",31.1951199,31.5183964,"https://goo.gl/maps/sSng67byRKGxnRWY8"],["Shubra El Khema 2",30.1185366,31.2663199,"https://www.google.com/maps/place/30%C2%B007'06.7%22N+31%C2%B015'58.8%22E/@30.1185366,31.2685086,17z/data=!3m1!4b1!4m4!3m3!8m2!3d30.1185366!4d31.2663199?hl=ar&entry=ttu"],["Shubra El Khema 3",30.133303,31.277658,"https://maps.app.goo.gl/ehebweBFzJmBPPb39?g_st=ic"],["Shubra Street 1",30.079542,31.245245,"https://maps.app.goo.gl/UwmonrmvE7T7bPep7?g_st=ic"],["Shubra Street 2",30.0699592,31.2448434,"https://www.google.com/maps?q=30.0699592,31.2448434&z=17&hl=ar"],["Sohag 1",26.561983,31.697031,"https://maps.google.com/?q=26.561983,31.697031"],["Sohag 2",26.5625225,31.6895192,"https://goo.gl/maps/x1TJZ7nstKZpVEy67"],["Stock",29.9508982,31.2699079,""],["Suez",29.9653683,32.5551667,"https://goo.gl/maps/L1UVSoSKRHsf3Zbb7"],["Talaat Harb",30.8423023,31.0179672,"https://goo.gl/maps/LpFsxvZbZzqAiMKC9"],["Tanta Mall 2",30.8423538,31.0183545,"https://goo.gl/maps/mgJDi8ymuStD4Z4g7"],["Zagazig 1",30.5884705,31.4937,"https://goo.gl/maps/Sz4AKRNNgMeZdU4LA"],["Zagazig 2",30.5890636,31.5060349,"https://goo.gl/maps/6AqNwkW6pCNw2PP28"],["Zagazig 3",30.591017,31.489019,"https://maps.google.com/?q=30.591017,31.489019"],["Zahraa Nasr City",30.0512789,31.3956458,"https://goo.gl/maps/8SBeLJTMEN2V6WHGA"],["Arabella Plaza Mall",29.9912896,31.4331227,""],["Bani Mazar 2",28.4916998,30.8026155,""],["Elsheikh Zayed",30.0381736,30.9793528,""],["Golf City Mall",30.03,31.5,""],["Maxim Mall",30.0295773,31.496699,""],["New Maadi",29.972992,31.2726078,""],["New Mohandseen",30.0553263,31.2032286,""],["New Mokattam",30.0216667,31.3033333,""],["Shebein Space Mall",30.5701944,31.0070278,""],["Tanta",30.7865086,31.0003757,""],["Zahraa C3 Mall",30.0512789,31.3956458,""]];
+const GMAP_KEY="AIzaSyDiQQV8SZQ7rqUxYNnOEVwPgTMtr8eYquM";
+const NOM="https://nominatim.openstreetmap.org";
+const addrEl=$("#address"),addrSug=$("#addrSug"),addrShow=$("#addrShow"),mapBox=$("#map"),mapNote=$("#mapNote"),geoBtn=$("#geoBtn");
+let addrTimer=null,sugList=[],sugIdx=-1;
+const langQ=()=>lang==="ar"?"ar,en":"en";
+const sep=()=>lang==="ar"?"، ":", ";
+function fmtAddr(a,disp){
+ if(!a)return disp||"";
+ const parts=[a.road||a.pedestrian||a.footway||a.path,a.neighbourhood||a.quarter||a.suburb,a.city||a.town||a.village||a.county,a.state].filter(Boolean);
+ const uniq=[...new Set(parts.map(x=>String(x).trim()).filter(Boolean))];
+ return uniq.length?uniq.join(sep()):(disp||"");
+}
+function setPopup(txt){if(!marker||!window.google)return;if(!map._iw)map._iw=new google.maps.InfoWindow();map._iw.setContent(String(txt||"-"));map._iw.open(map,marker)}
+async function revAt(lat,lng){
+ try{
+  const u=NOM+"/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language="+encodeURIComponent(langQ())+"&lat="+lat+"&lon="+lng;
+  const r=await fetch(u,{headers:{Accept:"application/json"}});
+  if(!r.ok)return"";
+  const d=await r.json();
+  return fmtAddr(d.address,d.display_name);
+ }catch(e){return""}
+}
+function showMap(lat,lng,label){
+  if(typeof google==="undefined"||!google.maps){mapNote.textContent=T("Ø§Ù„Ø®Ø±ÙŠØ·Ø© Ù…Ø­ØªØ§Ø¬Ø© Ø§Ù†ØªØ±Ù†Øª - ØªÙ‚Ø¯Ø± ØªÙƒØªØ¨ Ø¹Ù†ÙˆØ§Ù†Ùƒ Ø¹Ø§Ø¯ÙŠ.","The map needs internet - you can still type your address.");return false}
+  mapBox.classList.remove("hide");
+  const pos={lat:+lat,lng:+lng};
+  if(!map){
+    map=new google.maps.Map(mapBox,{center:pos,zoom:16,mapId:"DEMO_MAP_ID",mapTypeId:"roadmap",zoomControl:true,streetViewControl:false,mapTypeControl:false,clickableIcons:false,gestureHandling:"greedy"});
+    map.addListener("click",e=>{const p=e.latLng;pinAt(p.lat(),p.lng(),true)});
+  }else{map.setCenter(pos);map.setZoom(16)}
+  if(!marker){
+    marker=new google.maps.Marker({position:pos,map:map,draggable:true});
+    marker.addListener("dragend",()=>{const p=marker.getPosition();pinAt(p.lat(),p.lng(),true)});
+  }else marker.setPosition(pos);
+  if(label)setPopup(label);
+  setTimeout(()=>{google.maps.event.trigger(map,"resize");map.setCenter(pos)},80);
+  return true;
+}async function pinAt(lat,lng,fill){
+ f.lat.value=lat.toFixed(6);f.lng.value=lng.toFixed(6);autoBranch();
+ if(map&&marker){marker.setPosition({lat:+lat,lng:+lng});map.setCenter({lat:+lat,lng:+lng});if(map._iw)map._iw.close()}else showMap(lat,lng,addrEl.value);
+ if(fill){
+  addrShow.textContent=T("⏳ بنجيب العنوان من الخريطة...","⏳ Looking up the address...");
+  const txt=await revAt(lat,lng);
+  if(txt)addrEl.value=txt;
+  setPopup(txt||addrEl.value);
+  mapNote.textContent=txt?T("✅ العنوان اتكتب تلقائيًا من موقع الدبوس.","✅ Address filled from the pin."):T("✅ الموقع اتثبت — اكتب العنوان بالتفصيل.","✅ Location pinned — please type the address.");
+  addrShow.textContent=txt?T("📍 الموقع: ","📍 Location: ")+txt:"";
+ }else setPopup(addrEl.value);
+}
+async function doSearch(q){
+ try{
+  const u=NOM+"/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=eg&accept-language="+encodeURIComponent(langQ())+"&q="+encodeURIComponent(q);
+  const r=await fetch(u,{headers:{Accept:"application/json"}});
+  if(!r.ok)return[];
+  const d=await r.json();
+  return Array.isArray(d)?d:[];
+ }catch(e){return[]}
+}
+function hideSug(){addrSug.classList.add("hide");sugIdx=-1}
+function pick(it){
+ const lat=+it.lat,lng=+it.lon;
+ if(isFinite(lat)&&isFinite(lng)){
+  addrEl.value=fmtAddr(it.address,it.display_name);
+  if(showMap(lat,lng,addrEl.value)){
+   f.lat.value=lat.toFixed(6);f.lng.value=lng.toFixed(6);autoBranch();
+   mapNote.textContent=T("✅ الموقع اتثبت على الخريطة — تقدر تسحب الدبوس أو تعدّل النص.","✅ Location pinned — drag the pin or edit the text.");
+   addrShow.textContent=T("📍 الموقع اللي اخترته: ","📍 Selected location: ")+addrEl.value;
+  }
+ }
+ hideSug();
+}
+function paintSug(items){
+ addrSug.innerHTML="";sugList=items;sugIdx=-1;
+ if(!items.length){
+  const d=document.createElement("div");d.className="empty";
+  d.textContent=T("مفيش نتائج — جرّب تكتب المحافظة والمنطقة.","No results — try adding the city and area.");
+  addrSug.appendChild(d);addrSug.classList.remove("hide");return;
+ }
+ items.forEach((it,i)=>{
+  const b=document.createElement("div");b.className="it";
+  const t=document.createElement("b");t.textContent=it.name||fmtAddr(it.address,it.display_name).split(sep())[0]||"—";
+  const s=document.createElement("small");s.textContent=fmtAddr(it.address,it.display_name);
+  b.appendChild(t);b.appendChild(s);
+  b.addEventListener("pointerdown",ev=>{ev.preventDefault();pick(it)});
+  addrSug.appendChild(b);
+ });
+ addrSug.classList.remove("hide");
+}
+addrEl.addEventListener("input",()=>{
+ clearTimeout(addrTimer);
+ const q=addrEl.value.trim();
+ f.lat.value="";f.lng.value="";
+ if(q.length<3){hideSug();return}
+ addrTimer=setTimeout(async()=>{
+  const items=await doSearch(q);
+  if(addrEl.value.trim()!==q)return;
+  paintSug(items);
+ },550);
+});
+addrEl.addEventListener("blur",()=>setTimeout(hideSug,160));
+addrEl.addEventListener("keydown",e=>{
+ if(addrSug.classList.contains("hide"))return;
+ const its=[...addrSug.querySelectorAll(".it")];
+ if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+  e.preventDefault();
+  sugIdx=(sugIdx+(e.key==="ArrowDown"?1:-1)+its.length)%its.length;
+  its.forEach((x,i)=>x.classList.toggle("on",i===sugIdx));
+  its[sugIdx].scrollIntoView({block:"nearest"});
+ }else if(e.key==="Enter"&&sugIdx>=0){e.preventDefault();pick(sugList[sugIdx])}
+ else if(e.key==="Escape")hideSug();
+});
+addrEl.addEventListener("change",async()=>{
+ const q=addrEl.value.trim();
+ if(q.length<3||f.lat.value)return;
+ const items=await doSearch(q);
+ if(items&&items[0]){
+  const lat=+items[0].lat,lng=+items[0].lon;
+  if(isFinite(lat)&&isFinite(lng)&&showMap(lat,lng,addrEl.value)){
+   f.lat.value=lat.toFixed(6);f.lng.value=lng.toFixed(6);autoBranch();
+   mapNote.textContent=T("✅ ظبطنا الموقع على الخريطة من العنوان اللي كتبته.","✅ Pinned from the address you typed.");
+  }
+ }
+});
+geoBtn.onclick=()=>{
+ if(!navigator.geolocation){alert(T("المتصفح لا يدعم تحديد الموقع.","Geolocation not supported."));return}
+ geoBtn.disabled=true;geoBtn.textContent=T("⏳ بنحدد موقعك...","⏳ Locating you...");
+ navigator.geolocation.getCurrentPosition(async p=>{
+  const lat=p.coords.latitude,lng=p.coords.longitude;
+  let txt="";
+  try{txt=await revAt(lat,lng)}catch(e){}
+  if(txt)addrEl.value=txt;
+  f.lat.value=lat.toFixed(6);f.lng.value=lng.toFixed(6);autoBranch();
+  showMap(lat,lng,txt||addrEl.value);
+  mapNote.textContent=txt?T("✅ موقعك الحالي اتحدد واتكتب في العنوان.","✅ Current location detected and filled in."):T("✅ اتحددت إحداثياتك — اكتب عنوانك بالتفصيل.","✅ Coordinates detected — please type your address.");
+  addrShow.textContent=txt?T("📍 موقعك الحالي: ","📍 Current location: ")+txt:T("📍 تم تحديد الموقع على الخريطة.","📍 Location pinned on the map.");
+  geoBtn.disabled=false;geoBtn.textContent=T("📍 استخدم موقعي الحالي (اختياري)","📍 Use my current location (optional)");
+ },()=>{
+  geoBtn.disabled=false;geoBtn.textContent=T("📍 استخدم موقعي الحالي (اختياري)","📍 Use my current location (optional)");
+  alert(T("مقدرناش نحدد موقعك. اكتب عنوانك بالتفصيل.","Couldn't get your location. Please type your address."));
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+};
+
+/* ===== بناء الأبلكيشن بعد نجاح الإرسال ===== */
+$("#docLogo").src=$(".logo").src;
+/* الطباعة: صفحة A4 واحدة بالضبط — نقيس الارتفاع ونصغّر لو محتاج */
+function fitA4(sel){
+ const el=document.querySelector(sel);if(!el)return ()=>{};
+ const old=el.style.zoom,mm=96/25.4,avail=(297-16)*mm;
+ el.style.zoom="1";void el.offsetHeight;
+ const h=el.getBoundingClientRect().height;
+ el.style.zoom=String(+(h>avail?Math.max(0.32,avail/h*0.98):1).toFixed(3));
+ return ()=>{el.style.zoom=old};
+}
+function printA4(sel){
+ const restore=fitA4(sel);
+ const back=()=>{restore();window.removeEventListener("afterprint",back)};
+ window.addEventListener("afterprint",back);
+ setTimeout(()=>window.print(),90);
+}
+$("#printBtn").onclick=()=>printA4("#doc");
+$("#againBtn").onclick=()=>location.reload();
+
+const LBL={branch:"🏢 فرع التقديم / Branch",position:"💼 الوظيفة المستهدفة / Job position",name:"👤 الاسم الكامل / Full name",gender:"🚻 النوع / Gender",dob:"🎂 تاريخ الميلاد / Date of birth",nid:"🪪 الرقم القومي / National ID",marital:"💍 الحالة الاجتماعية / Marital status",military:"🎖️ موقف التجنيد / Military status",phone:"📱 رقم الموبايل / Mobile",whatsapp:"💬 رقم واتساب / WhatsApp",email:"📧 البريد الإلكتروني / Email",address:"📍 عنوان السكن / Home address",coords:"🌍 إحداثيات الموقع / Coordinates",edu:"🎓 المؤهل الدراسي / Qualification",major:"📚 التخصص والجامعة / Major & university",year:"📖 الفرقة الدراسية / Current year",gradYear:"🗓️ سنة التخرج / Graduation year",hasExp:"🧳 خبرة سابقة / Previous experience",lastEmployer:"🏭 آخر جهة عمل / Last employer",lastTitle:"📋 المسمى الوظيفي / Job title",lastDuration:"⏳ مدة العمل / Duration",leaveReason:"🤔 سبب ترك العمل / Reason for leaving",skills:"🗣️ لغات ومهارات / Languages & skills",startWhen:"🚀 متاح امتى؟ / Available from",shifts:"🌙 مستعد للورديات والإجازات؟ / Shifts & holidays",salary:"💰 الراتب المتوقع / Expected salary",source:"📣 عرفت عن الوظيفة منين / Source",notes:"📝 ملاحظات / Notes"};
+const GROUPS=[
+ {t:"👤 البيانات الشخصية / Personal details",f:["name","gender","dob","nid","marital","military"]},
+ {t:"📇 بيانات التواصل والوظيفة / Contact & position",f:["branch","position","phone","whatsapp","email","address","coords"]},
+ {t:"🎓 التعليم / Education",f:["edu","major","year","gradYear"]},
+ {t:"🧳 خبرة العمل / Work experience",f:["hasExp","lastEmployer","lastTitle","lastDuration","leaveReason"]},
+ {t:"ℹ️ معلومات إضافية / Additional information",f:["startWhen","shifts","salary","source","skills","notes"]}
+];
+const WIDE=["address","major","skills","notes"];
+
+function fldValue(k,d){
+  if(k==="coords")return d.lat+", "+d.lng;
+  if(k==="dob"&&d.dob){const dt=new Date(d.dob+"T00:00:00");if(!isNaN(dt))return dt.toLocaleDateString(lang==="ar"?"ar-EG-u-nu-latn":"en-GB")}
+  const el=f.elements[k];
+  if(!el)return (d[k]||"").trim();
+  if(el.tagName==="SELECT"){const o=el.options[el.selectedIndex];return !o||o.value===""?"":o.textContent.trim()}
+  if(el.type==="checkbox")return el.checked?T("✔ نعم","✔ Yes"):"";
+  return (d[k]||"").trim();
+}
+
+function renderReport(d){
+  const ph=$("#docPhoto"),ps=document.querySelector(".doc-photo span");
+  if(d.photoData){ph.src=d.photoData;ph.classList.remove("hide");ps.classList.add("hide")}
+  else{ph.removeAttribute("src");ph.classList.add("hide");ps.classList.remove("hide")}
+  $("#appRef").textContent=lastRef;
+  const dt=new Date(d.submittedAt);
+  $("#appDate").textContent=isNaN(dt)?"—":dt.toLocaleString(lang==="ar"?"ar-EG-u-nu-latn":"en-GB",{dateStyle:"medium",timeStyle:"short"});
+  const R=$("#report");R.textContent="";
+  GROUPS.forEach(g=>{
+    const sec=document.createElement("div");sec.className="sect";
+    const h=document.createElement("h3");h.textContent=g.t;sec.appendChild(h);
+    const grid=document.createElement("div");grid.className="grid";
+    g.f.forEach(k=>{
+      if(k==="coords"&&!d.lat)return;
+      if(k==="year"&&d.edu!=="Student")return;
+      if(k==="gradYear"&&d.edu==="Student")return;
+      if(["lastEmployer","lastTitle","lastDuration","leaveReason"].includes(k)&&d.hasExp!=="Yes")return;
+      const v=fldValue(k,d);if(!v)return;
+      const c=document.createElement("div");c.className="fld"+(WIDE.includes(k)?" wide":"");
+      const s=document.createElement("span");s.textContent=LBL[k]||k;
+      const b=document.createElement("b");b.textContent=v;
+      c.appendChild(s);c.appendChild(b);grid.appendChild(c);
+    });
+    sec.appendChild(grid);R.appendChild(sec);
+  });
+}
+</script>
+</body>
+</html>

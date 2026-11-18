@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;font-family:Cairo,sans-serif;background:var(--bg);color:var(--ink)}
 .top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:0 24px;background:#fff;border-bottom:3px solid var(--red)}
 .brandwrap{display:flex;align-items:center;gap:10px;min-width:0}
-.toplogo{width:auto;height:52px;object-fit:contain;flex:none;display:block;border:3px solid #000;padding:2px;background:#fff}
+.toplogo{width:auto;height:52px;box-sizing:content-box;object-fit:contain;flex:none;display:block;border:3px solid #000;padding:2px;background:#fff}
 .logo{font-weight:800;font-size:20px}.logo b{color:var(--red)}
 .own{font-size:11.5px;font-weight:800;color:#1565c0;margin-top:3px;letter-spacing:.4px}
 .own span{color:var(--mu);font-weight:700;letter-spacing:.2px}
@@ -172,7 +172,7 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 /* ===== توافق الموبايل ===== */
 @media screen and (max-width:820px){
  body{-webkit-text-size-adjust:100%}
- .top{position:sticky;top:0;z-index:4;height:52px;padding:0 12px;gap:8px}
+ .top{position:sticky;top:0;z-index:4;height:62px;padding:0 12px;gap:8px}
  .top>.brandwrap{flex:1 1 100%;height:100%;overflow:hidden}
  .toplogo{height:52px;width:auto}
  .logo{font-size:15px}

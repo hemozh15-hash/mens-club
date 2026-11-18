@@ -593,7 +593,7 @@ function validate(i){
   if(TEST)return true; /* ⏸️ وضع الاختبار: عبور من غير أي تحقق */
   let ok=true,msg="";
   $$(".step")[i].querySelectorAll("input[required],select[required]").forEach(el=>{
-    let bad=el.type==="checkbox"?!el.checked:!el.value.trim();
+    let bad=el.name==="photo"?!f.elements.photoData.value:(el.type==="checkbox"?!el.checked:!el.value.trim());
     if(el.name==="nid"&&!/^\d{14}$/.test(el.value)) bad=true;
     if(el.name==="phone"&&!/^01[0125]\d{8}$/.test(el.value)) bad=true;
     if(el.name==="name"&&el.value.trim().split(/\s+/).length<3) bad=true;

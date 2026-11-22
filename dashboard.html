@@ -777,7 +777,7 @@ function draw(){
  if(RETABS.indexOf(S.tab)>=0)$("#ptitle").textContent=RETITLE[S.tab]+" | MC Men's Club"+T(" — أرشيف الطلبات"," — applications archive")+(S.branch?" | "+T("الفرع:","Branch:")+S.branch:"")+(S.pos?" | "+T("الوظيفة:","Position:")+S.pos:"");
  if(S.tab==="list"||RETABS.indexOf(S.tab)>=0){$("#list").classList.remove("hide");
   $("#list").innerHTML=`<table><tr><th>${T("الاسم","Name")}</th><th>${T("الوظيفة","Position")}</th><th>${T("فرع التقديم","Branch")}</th><th>${T("مدير المنطقة","Area manager")}</th><th>${T("أقرب فرع للمتقدم","Nearest branch")}</th><th>${T("الموبايل","Mobile")}</th><th>${T("التاريخ","Date")}</th><th>${T("الحالة","Status")}</th><th>${T("تعليق HR","HR comment")}</th><th>${T("طباعة","Print")}</th></tr>`+
-  (rows.map(r=>{const n=near(r)[0];return `<tr class="row" data-a="${act(()=>openDt(r._row))}"><td><b>${esc(r.name)}</b></td><td>${esc(dv(r,"position"))}</td><td>${esc(r.branch)}</td><td class="mgrcol">${mgrCell(r.branch)}</td><td>${n?esc(n[0])+" · "+esc(n[1])+" "+T("كم","km"):"—"}</td><td dir="ltr" style="text-align:right">${esc(r.phone)}</td><td>${esc((r.submittedAt||"").slice(5,10).replace("-","/"))}</td><td><span class="st ${CL[r.Status]||"n"}">${stT(r.Status)||esc(r.Status)}</span></td><td style="max-width:160px;color:var(--mu);font-size:12px">${r.HRComment?"📝 "+esc(String(r.HRComment).slice(0,40)):""}</td><td><button class="btn" style="padding:4px 10px" data-a="${act(()=>openReport(r))}">${T("🖨️ طباعة","🖨️ Print")}</button>${hrById(r._hr)?`<div style="font-size:11px;font-weight:700;color:${hrColor(r._hr)};margin-top:4px;white-space:nowrap">👤 ${esc(hrById(r._hr).name)}</div>`:""}</td></tr>`}).join("")||`<tr><td colspan="10" style="text-align:center;color:var(--mu);padding:30px">${T("لا توجد طلبات في الفلتر ده.","No applications match this filter.")}</td></tr>`)+"</table>";
+  (rows.map(r=>{const n=near(r)[0];return `<tr class="row" data-a="${act(()=>openDt(r._row))}"><td><b>${esc(r.name)}</b></td><td>${esc(dv(r,"position"))}</td><td>${esc(r.branch)}</td><td class="mgrcol">${mgrCell(r.branch)}</td><td>${n?esc(n[0])+" · "+esc(n[1])+" "+T("كم","km"):"—"}</td><td dir="ltr" style="text-align:right">${esc(r.phone)}</td><td>${esc((r.submittedAt||"").slice(5,10).replace("-","/"))}</td><td><span class="st ${CL[r.Status]||"n"}">${stT(r.Status)||esc(r.Status)}</span></td><td style="max-width:220px;color:var(--mu);font-size:12px;white-space:normal;word-break:break-word" title="${esc(r.HRComment||"")}">${r.HRComment?"📝 "+esc(r.HRComment):""}</td><td><button class="btn" style="padding:4px 10px" data-a="${act(()=>openReport(r))}">${T("🖨️ طباعة","🖨️ Print")}</button>${hrById(r._hr)?`<div style="font-size:11px;font-weight:700;color:${hrColor(r._hr)};margin-top:4px;white-space:nowrap">👤 ${esc(hrById(r._hr).name)}</div>`:""}</td></tr>`}).join("")||`<tr><td colspan="10" style="text-align:center;color:var(--mu);padding:30px">${T("لا توجد طلبات في الفلتر ده.","No applications match this filter.")}</td></tr>`)+"</table>";
  }else{$("#pipe").classList.remove("hide");$("#pvbar").classList.remove("hide");
   $("#pvbar").innerHTML=PVS.map(([k,ar,en])=>`<span class="chip ${S.pview===k?"on":""}" data-a="${act(()=>{S.pview=k;try{localStorage.setItem("hrpv",k)}catch(e){}draw()})}">${T(ar,en)}</span>`).join("")+`<span style="font-size:12px;color:var(--mu);margin-inline-start:6px">${T("اضغط على أي طلب لفتح ملفه","Click any application to open it")}</span>`;
   pipeMode(S.pview);
@@ -1140,6 +1140,8 @@ function openDt(row){
  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="rb" style="flex:1">${T("🖨️ عرض الاستمارة / طباعة","🖨️ View form / Print")}</button></div>
  <div class="rejbox" style="margin-top:10px"><div class="rej-t">${T("✏️ تعديل بيانات الموظف","✏️ Edit employee details")}</div>
   <div class="rej-chips"><select id="emppos" style="flex:1;min-width:130px">${POS.map(p=>`<option value="${esc(p)}"${p===r.position?" selected":""}>${esc(p)}</option>`).join("")}</select><input type="date" id="empdob" value="${esc(String(r.dob||"").slice(0,10))}" style="flex:1;min-width:130px"><button class="btn r" id="empsave">${T("حفظ","Save")}</button></div><div class="hint" id="empmsg"></div></div>
+ <div class="rejbox" style="margin-top:10px;border-color:#f3b7b7"><div class="rej-t" style="color:var(--red)">🗑️ ${T("حذف الطلب (إبراهيم بس)","Delete application (Ebrahim only)")}</div>
+  <div class="rej-chips"><input id="delpw" type="password" autocomplete="off" placeholder="${T("كلمة مرور إبراهيم","Ebrahim password")}" style="flex:1;min-width:130px"><button class="btn r" id="delgo">${T("حذف نهائي","Delete permanently")}</button></div><div class="hint" id="delmsg"></div></div>
  <div class="hrpick"><div class="hrpick-t">${T("👤 HR المسؤول","👤 Responsible HR")}</div>
   <div class="hrpick-r"><select id="hrs"><option value="">${T("— بدون —","— none —")}</option>${HRS.map(h=>`<option value="${h.id}" style="color:${hrColor(h.id)}"${h.id===r._hr?" selected":""}>${esc(h.name)}</option>`).join("")}</select><input id="hrp" type="password" class="${sel?"":"hide"}" autocomplete="off" placeholder="${T("كلمة المرور","Password")}"><button class="btn r" id="hrb">${T("تأكيد","Confirm")}</button></div>
   <div class="hrpick-m" id="hrm">${sel?`<span class="hrbadge" style="color:${hrColor(sel.id)}">✅ ${esc(sel.name)} · #${esc(sel.pass)}</span>`:T("لم يتم اختيار HR مسؤول","No responsible HR selected")}</div>
@@ -1156,6 +1158,7 @@ function openDt(row){
  $("#bs").onchange=e=>setBranch(r,e.target.value);
  $("#ss").onchange=e=>setStatus(r,e.target.value);
  $("#rb").onclick=()=>openReport(r);
+ $("#hcs").onclick=()=>saveComment(r);
  $("#empsave").onclick=async()=>{
   const np=$("#emppos").value,nd=$("#empdob").value;
   if(!np||!nd){$("#empmsg").textContent=T("الوظيفة والتاريخ مطلوبان","Position and date are required");return}
@@ -1168,6 +1171,19 @@ function openDt(row){
    }
    $("#empmsg").textContent=T("✅ اتحفظ","✅ Saved");
   }catch(e){r.position=oP;r.dob=oD;draw();$("#empmsg").textContent=T("تعذر الحفظ، حاول تاني","Could not save. Try again")}
+
+  $("#delgo").onclick=async()=>{
+   const pw=$("#delpw").value.trim(),m=$("#delmsg");
+   if(pw!=="1994"){m.textContent=T("❌ كلمة المرور غير صحيحة","❌ Incorrect password");return}
+   if(!confirm(T("حذف الطلب "+r.ref+" — "+r.name+" نهائيًا؟","Delete application "+r.ref+" — "+r.name+" permanently?")))return;
+   m.textContent=T("جاري الحذف...","Deleting...");
+   try{
+    if(!DEMO){const x=await api(Object.assign({action:"deleteref"},idOf(r)));if(!x||!x.ok)throw 0}
+    else ROWS=ROWS.filter(y=>y._row!==r._row);
+    OPEN_ROW=null;$("#dt").classList.remove("on");
+    if(!DEMO)await load();draw();
+   }catch(e){m.textContent=T("تعذر الحذف، حاول تاني","Could not delete. Try again")}
+  };
  };
  getPhoto(r).then(p=>{if(p&&OPEN_ROW===row){const av=$("#av");if(av){av.textContent="";const im=document.createElement("img");im.src=p;im.alt="";im.style.cssText="width:100%;height:100%;object-fit:cover";av.appendChild(im)}}}).catch(()=>{});
  $$("#rejbox .rejchip").forEach(c=>c.onclick=()=>{const hc=$("#hc");hc.value=c.dataset.r;$$("#rejbox .rejchip").forEach(x=>x.classList.toggle("on",x===c));hc.focus()});
@@ -1225,9 +1241,9 @@ async function setSource(r,k){
 
 /* ---------- الصورة والتعليق والاستمارة ---------- */
 async function getPhoto(r){if(r._photo!==undefined)return r._photo;if(DEMO||!r.photoId){r._photo="";return""}try{const d=await api(Object.assign({action:"photo"},idOf(r)));r._photo=d.ok?d.data:""}catch(e){r._photo=""}return r._photo}
-async function saveComment(r){const v=$("#hc").value;r.HRComment=v;$("#hcm").textContent=T("جاري الحفظ...","Saving...");
- if(!DEMO){try{const x=await api(Object.assign({action:"comment",text:v},idOf(r)));if(!x||!x.ok)throw 0}catch(e){$("#hcm").textContent="";alert(T("تعذر حفظ التعليق، حاول تاني.","Could not save comment. Try again."));return}}
- $("#hcm").textContent=T("تم الحفظ ✅","Saved ✅");draw()}
+async function saveComment(r){const v=$("#hc").value,o=r.HRComment;r.HRComment=v;$("#hcm").textContent=T("جاري الحفظ...","Saving...");
+ if(!DEMO){try{const x=await api(Object.assign({action:"comment",text:v},idOf(r)));if(!x||!x.ok)throw 0}catch(e){r.HRComment=o;$("#hcm").textContent="";alert(T("تعذر حفظ التعليق، حاول تاني.","Could not save comment. Try again."));return}}
+ $("#hcm").textContent=T("تم الحفظ ✅","Saved ✅");draw();if(OPEN_ROW===r._row)openDt(r._row)}
 const DV=(r,k)=>{if(k==="coords")return r.lat?r.lat+", "+r.lng:"";if(k==="dob"&&r.dob){const d=new Date(r.dob);return isNaN(d)?r.dob:d.toLocaleDateString("ar-EG-u-nu-latn")}
  if(k==="hasExp")return MAPS.hasExp[r.hasExp]||r.hasExp||"";if(k==="year")return MAPS.year[r.year]||r.year||"";return r[k]||""};
 function buildReport(r){

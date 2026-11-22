@@ -1265,13 +1265,43 @@ async function openReport(r){REPORT_ROW=r;$("#rpb").innerHTML=buildReport(r);$("
  else if($("#rpph"))$("#rpph").textContent=T("📷 صورة شخصية / Photo","📷 Photo")}
 $("#rpx").onclick=()=>{$("#rp").classList.add("hide");document.body.classList.remove("pr-rp")};
 
-/* ---------- تصدير Excel (في كل التابات) ---------- */
-function dl(name,rows){const c=v=>{v=String(v==null?"":v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+rows.map(r=>r.map(c).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));a.download=name;a.click()}
-$("#csv").onclick=()=>{
- if(S.tab==="dash"){dl("dashboard-report.csv",[["القسم","البند","القيمة"],["الفترة",periodLabel(),""]].concat(REP));return}
- if(S.tab==="prep"){dl("preparation-period.csv",[["Name","Branch","Position","HR","Hire date","Contract end","Out of contract","Days","Status"]].concat(prepRows().map(r=>[r.name,r.branch,dv(r,"position"),(hrById(r._hr)||{}).name||"",hireDate(r),endDate(r),isOut(r)?"YES":"NO",prepDays(r)??"",prepStat(r).toUpperCase()])));return}
- const k=["ref","submittedAt","entry","branch","position","name","gender","dob","nid","phone","whatsapp","address","edu","major","hasExp","startWhen","Status","StatusChangedAt","HRComment","ResponsibleHR","Nearest 1","Distance 1 (km)"];
- dl("applicants.csv",[k].concat(listRows().map(r=>k.map(x=>x==="ResponsibleHR"?((hrById(r._hr)||{}).name||""):["nid","phone","whatsapp"].includes(x)?"'"+r[x]:r[x]))))};
+/* ---------- تصدير Excel: ملف واحد بـ 4 تابات ---------- */
+function xe(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,"")}
+function xc(v,st){const num=typeof v==="number"&&isFinite(v);const s=num?(st==="a"?"an":st==="c"?"n":st):st;return `<Cell${s?` ss:StyleID="${s}"`:""}><Data ss:Type="${num?"Number":"String"}">${xe(num?v:String(v==null?"":v))}</Data></Cell>`}
+function xs(name,head,widths,rows){
+ const cols=widths.map(w=>`<Column ss:Width="${w}"/>`).join("");
+ const hr=`<Row ss:Height="30">`+head.map(h=>xc(h,"h")).join("")+`</Row>`;
+ const br=rows.map((r,i)=>`<Row ss:Height="21">`+r.map(v=>xc(v,i%2?"a":"c")).join("")+`</Row>`).join("");
+ return `<Worksheet ss:Name="${xe(name)}"><Table>${cols}${hr}${br}</Table><AutoFilter x:Range="R1C1:R${rows.length+1}C${head.length}"/><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane><FreezePanes/><ActivePane>2</ActivePane></WorksheetOptions></Worksheet>`;
+}
+function exportExcel(){
+ const B='<Borders>'+['Bottom','Top','Left','Right'].map(p=>`<Border ss:Position="${p}" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/>`).join("")+'</Borders>';
+ const style=(id,fill,align,num)=>`<Style ss:ID="${id}"><Alignment ${align||'ss:Vertical="Center" ss:WrapText="1"'}/>${fill?`<Interior ss:Color="${fill}" ss:Pattern="Solid"/>`:""}<Font ss:FontName="Cairo" ss:Size="10"${id==="h"?' ss:Bold="1" ss:Color="#FFFFFF"':""}/>${B}${num?"":'<NumberFormat ss:Format="@"/>'}</Style>`;
+ const styles='<Styles>'+style("h","#C8102E")+style("c","")+style("a","#F5F7FA")+style("n","",'ss:Horizontal="Right" ss:Vertical="Center"',1)+style("an","#F5F7FA",'ss:Horizontal="Right" ss:Vertical="Center"',1)+'</Styles>';
+ const keys=["ref","submittedAt","entry","branch","position","name","gender","dob","nid","phone","whatsapp","email","address","lat","lng","edu","major","year","gradYear","hasExp","lastEmployer","lastTitle","lastDuration","leaveReason","skills","startWhen","shifts","salary","source","notes","lang","Status","StatusChangedAt","HRComment","ResponsibleHR","PrepHire","PrepEnd","PrepOut","EmpCode","photo","Nearest 1","Distance 1 (km)"];
+ const heads=["رقم الطلب","تاريخ التقديم","قناة التقديم","الفرع","الوظيفة","الاسم","النوع","تاريخ الميلاد","الرقم القومي","الموبايل","واتساب","البريد","العنوان","خط العرض","خط الطول","المؤهل","التخصص","الفرقة","سنة التخرج","خبرة سابقة","آخر جهة عمل","المسمى الوظيفي","مدة العمل","سبب ترك العمل","المهارات","متاح امتى","الورديات","الراتب المتوقع","المصدر","ملاحظات المتقدم","اللغة","الحالة","تاريخ تغيير الحالة","تعليق الموارد البشرية","المسؤول HR","تاريخ التعيين","انتهاء العقد","خارج الفترة","كود الموظف","الصورة","أقرب فرع","المسافة (كم)"];
+ const widths=[95,120,85,190,150,230,70,110,150,120,120,200,260,85,85,140,230,80,100,100,180,170,110,220,250,110,90,110,140,260,70,150,140,260,190,110,110,90,110,330,200,110];
+ const val=(r,k)=>{
+  if(k==="Status")return stT(r.Status);
+  if(k==="ResponsibleHR")return r.ResponsibleHR||((hrById(r._hr)||{}).name||"");
+  if(k==="photo")return r.photoId?"https://drive.google.com/file/d/"+encodeURIComponent(r.photoId)+"/view":"";
+  return dv(r,k);
+ };
+ const apps=ROWS.map(r=>keys.map(k=>val(r,k)));
+ const today=new Date().toISOString().slice(0,10),hired=ROWS.filter(r=>r.Status==="Hired").length;
+ const sum=[["الأرقام الرئيسية","إجمالي الطلبات",ROWS.length],["الأرقام الرئيسية","طلبات اليوم",ROWS.filter(r=>String(r.submittedAt||"").slice(0,10)===today).length],["الأرقام الرئيسية","تم التعيين",hired],["الأرقام الرئيسية","نسبة التحويل",(ROWS.length?Math.round(hired/ROWS.length*100):0)+"%"]];
+ Object.keys(ST).forEach(k=>sum.push(["الحالات",stT(k),ROWS.filter(r=>r.Status===k).length]));
+ [...new Set(ROWS.map(r=>r.position).filter(Boolean))].sort().forEach(k=>sum.push(["الوظائف",dv({position:k},"position"),ROWS.filter(r=>r.position===k).length]));
+ [...new Set(ROWS.map(r=>r.branch).filter(Boolean))].sort().forEach(k=>sum.push(["الفروع",k,ROWS.filter(r=>r.branch===k).length]));
+ sum.push(["المصدر","QR",ROWS.filter(r=>r.entry==="QR").length],["المصدر","رابط مباشر",ROWS.filter(r=>r.entry!=="QR").length]);
+ HRS.forEach(h=>sum.push(["الموارد البشرية",h.name,ROWS.filter(r=>(r.ResponsibleHR||"")===h.name||r._hr===h.id).length]));
+ const prep=ROWS.filter(r=>r.Status==="Hired").map(r=>[r.ref,r.name,r.branch,dv(r,"position"),(hrById(r._hr)||{}).name||"",empCode(r),hireDate(r),endDate(r),prepDays(r)??"",({pass:"نجحت",pending:"تحت المتابعة",fail:"لم تنجح"})[prepStat(r)]||prepStat(r),isOut(r)?"نعم":"لا"]);
+ const set=[];BRM.forEach(b=>set.push(["الفروع",b.name,b.area||"",b.mgr||"",b.off?"متوقف":"نشط"]));POS.forEach(p=>set.push(["الوظائف",p,"","",""]));HRS.forEach(h=>set.push(["الموارد البشرية",h.name,"","",""]));
+ const sheets=[xs("كل الطلبات",heads,widths,apps),xs("ملخص الداش بورد",["القسم","البند","القيمة"],[150,240,100],sum),xs("فترة الاختيار",["رقم الطلب","الاسم","الفرع","الوظيفة","المسؤول HR","كود الموظف","تاريخ التعيين","انتهاء العقد","الأيام","الحالة","خارج الفترة"],[95,230,190,150,190,110,110,110,80,140,100],prep),xs("الإعدادات",["القسم","الاسم","المنطقة","المدير","الحالة"],[150,240,170,190,100],set)];
+ const xml='<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+styles+sheets.join("")+'</Workbook>';
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"}));a.download="MC_HR_"+new Date().toISOString().slice(0,10)+".xls";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),20000);
+}
+$("#csv").onclick=exportExcel;
 $("#toplogo").src=MCLOGO;$("#loginLogo").src=MCLOGO;
 setLangUI();
 </script>

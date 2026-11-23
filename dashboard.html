@@ -27,7 +27,7 @@
 .chip{padding:3px 14px;border-radius:14px;font-size:13px;font-weight:600;border:1.5px solid var(--red);color:var(--red);background:#fff;cursor:pointer}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .st{display:inline-block;padding:2px 12px;border-radius:14px;font-size:12px;font-weight:600;white-space:nowrap}
-.pd{background:#fff;border:1.5px solid var(--grn);color:var(--grn)}.hd{background:#0f5132;color:#fff}.n{background:var(--red);color:#fff}.m{background:var(--ink);color:#fff}.i{border:1.5px solid var(--red);color:var(--red);background:#fff}.ok{background:var(--grn);color:#fff}.no{background:#eee;color:#555}.hl{background:#fff3cd;border:1.5px solid #e0b100;color:#8a5a00}.ns{background:#fde8e8;border:1.5px solid var(--red);color:#9b1119}
+.pd{background:#fff;border:1.5px solid var(--grn);color:var(--grn)}.hd{background:#0f5132;color:#fff}.n{background:var(--red);color:#fff}.m{background:var(--ink);color:#fff}.i{border:1.5px solid var(--red);color:var(--red);background:#fff}.ok{background:var(--grn);color:#fff}.no{background:#eee;color:#555}.hl{background:#fff3cd;border:1.5px solid #e0b100;color:#8a5a00}.ns{background:#fde8e8;border:1.5px solid var(--red);color:#9b1119}.iv{background:#2563eb;color:#fff}
 input,select,textarea{font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
 .card{background:#fff;border:1px solid var(--line);border-radius:14px}.pad{padding:16px}
 .card h3.t{margin:0 0 12px;font-size:15px;color:var(--red)}
@@ -295,12 +295,12 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 <!-- مفيش مفتاح مدمج في الصفحة — الدخول بكلمة سر بيتبعت للسيرفر -->
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyLRoqo4FuOKSEjKQAXsSgI8EoGipQDdgKPhRvuNmr9_dON1cSKQi76x9d_raRs9vV7bw/exec";
-const ORDER=["New","Under review","Test Floor","Accepted","Preparing docs","Hired"];
+const ORDER=["New","Under review","Interview Invitation","Test Floor","Accepted","Preparing docs","Hired"];
 const PIPE=ORDER.concat(["Hold","No Show"]);
-const ST={"New":"جديد","Under review":"تحت المراجعة","Test Floor":"TEST FLOOR","Accepted":"مقبول","Preparing docs":"بيجهز أوراقه","Hired":"تم التعيين","Hold":"HOLD","No Show":"NO SHOW","Rejected":"مرفوض"};
-const CL={"New":"n","Under review":"m","Test Floor":"i","Accepted":"ok","Preparing docs":"pd","Hired":"hd","Hold":"hl","No Show":"ns","Rejected":"no"};
-const FC=["#d71920","#b3151b","#8f1116","#1a1a1a","#2f7a4f","#0f5132"];
-const WA=["Rejected","Test Floor","Accepted","Preparing docs","Hired"],WL={"Rejected":"اعتذار (مرفوض)","Test Floor":"دعوة TEST FLOOR","Accepted":"قبول","Preparing docs":"تجهيز الأوراق","Hired":"تم التعيين"};
+const ST={"New":"جديد","Under review":"تحت المراجعة","Interview Invitation":"Interview Invitation","Test Floor":"TEST FLOOR","Accepted":"مقبول","Preparing docs":"بيجهز أوراقه","Hired":"تم التعيين","Hold":"HOLD","No Show":"NO SHOW","Rejected":"مرفوض"};
+const CL={"New":"n","Under review":"m","Interview Invitation":"iv","Test Floor":"i","Accepted":"ok","Preparing docs":"pd","Hired":"hd","Hold":"hl","No Show":"ns","Rejected":"no"};
+const FC=["#d71920","#b3151b","#2563eb","#8f1116","#1a1a1a","#2f7a4f","#0f5132"];
+const WA=["Rejected","Interview Invitation","Test Floor","Accepted","Preparing docs","Hired"],WL={"Rejected":"اعتذار (مرفوض)","Interview Invitation":"دعوة مقابلة","Test Floor":"دعوة TEST FLOOR","Accepted":"قبول","Preparing docs":"تجهيز الأوراق","Hired":"تم التعيين"};
 const REJ=["Below Required Qualification","No Relevant Experience","Bad Attitude","Not Presentable","Incomplete Hiring Documents","Over the Required Age Limit"];
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -329,7 +329,7 @@ async function printA4(sel){
  setTimeout(()=>window.print(),90);
 }
 /* st(k) → اسم الحالة باللغة الحالية */
-const ST_EN={"New":"New","Under review":"Under review","Test Floor":"TEST FLOOR","Accepted":"Accepted","Preparing docs":"Preparing docs","Hired":"Hired","Hold":"HOLD","No Show":"NO SHOW","Rejected":"Rejected"};
+const ST_EN={"New":"New","Under review":"Under review","Interview Invitation":"Interview Invitation","Test Floor":"TEST FLOOR","Accepted":"Accepted","Preparing docs":"Preparing docs","Hired":"Hired","Hold":"HOLD","No Show":"NO SHOW","Rejected":"Rejected"};
 const WL_EN={"Rejected":"Politely decline","Test Floor":"Test Floor invite","Accepted":"Acceptance","Preparing docs":"Send documents","Hired":"Onboarding"};
 function stT(k){return T(ST[k]||k,ST_EN[k]||k)}
 function wlT(k){return T(WL[k]||k,WL_EN[k]||k)}

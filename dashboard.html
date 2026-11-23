@@ -26,8 +26,9 @@
 .bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
 .chip{padding:3px 14px;border-radius:14px;font-size:13px;font-weight:600;border:1.5px solid var(--red);color:var(--red);background:#fff;cursor:pointer}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.rj.on{background:var(--red);border-color:var(--red);color:#fff}
 .st{display:inline-block;padding:2px 12px;border-radius:14px;font-size:12px;font-weight:600;white-space:nowrap}
-.pd{background:#fff;border:1.5px solid var(--grn);color:var(--grn)}.hd{background:#0f5132;color:#fff}.n{background:var(--red);color:#fff}.m{background:var(--ink);color:#fff}.i{border:1.5px solid var(--red);color:var(--red);background:#fff}.ok{background:var(--grn);color:#fff}.no{background:#eee;color:#555}.hl{background:#fff3cd;border:1.5px solid #e0b100;color:#8a5a00}.ns{background:#fde8e8;border:1.5px solid var(--red);color:#9b1119}.iv{background:#2563eb;color:#fff}
+.pd{background:#fff;border:1.5px solid var(--grn);color:var(--grn)}.hd{background:#0f5132;color:#fff}.n{background:var(--red);color:#fff}.m{background:var(--ink);color:#fff}.i{border:1.5px solid var(--red);color:var(--red);background:#fff}.ok{background:var(--grn);color:#fff}.no{background:#eee;color:#555}.hl{background:#fff3cd;border:1.5px solid #e0b100;color:#8a5a00}.ns{background:#fde8e8;border:1.5px solid var(--red);color:#9b1119}.iv{background:#2563eb;color:#fff}.rj{background:var(--red);color:#fff}
 input,select,textarea{font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
 .card{background:#fff;border:1px solid var(--line);border-radius:14px}.pad{padding:16px}
 .card h3.t{margin:0 0 12px;font-size:15px;color:var(--red)}
@@ -296,9 +297,9 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyLRoqo4FuOKSEjKQAXsSgI8EoGipQDdgKPhRvuNmr9_dON1cSKQi76x9d_raRs9vV7bw/exec";
 const ORDER=["New","Under review","Interview Invitation","Test Floor","Accepted","Preparing docs","Hired"];
-const PIPE=ORDER.concat(["Hold","No Show"]);
+const PIPE=ORDER.concat(["Hold","No Show","Rejected"]);
 const ST={"New":"جديد","Under review":"تحت المراجعة","Interview Invitation":"Interview Invitation","Test Floor":"TEST FLOOR","Accepted":"مقبول","Preparing docs":"بيجهز أوراقه","Hired":"تم التعيين","Hold":"HOLD","No Show":"NO SHOW","Rejected":"مرفوض"};
-const CL={"New":"n","Under review":"m","Interview Invitation":"iv","Test Floor":"i","Accepted":"ok","Preparing docs":"pd","Hired":"hd","Hold":"hl","No Show":"ns","Rejected":"no"};
+const CL={"New":"n","Under review":"m","Interview Invitation":"iv","Test Floor":"i","Accepted":"ok","Preparing docs":"pd","Hired":"hd","Hold":"hl","No Show":"ns","Rejected":"rj"};
 const FC=["#d71920","#b3151b","#2563eb","#8f1116","#1a1a1a","#2f7a4f","#0f5132"];
 const WA=["Rejected","Interview Invitation","Test Floor","Accepted","Preparing docs","Hired"],WL={"Rejected":"اعتذار (مرفوض)","Interview Invitation":"دعوة مقابلة","Test Floor":"دعوة TEST FLOOR","Accepted":"قبول","Preparing docs":"تجهيز الأوراق","Hired":"تم التعيين"};
 const REJ=["Below Required Qualification","No Relevant Experience","Bad Attitude","Not Presentable","Incomplete Hiring Documents","Over the Required Age Limit"];
@@ -775,7 +776,7 @@ function draw(){
  if(dash)return drawDash();
  $("#q").classList.remove("hide");$("#chips").classList.remove("hide");
  const rows0=base(),q=S.q.trim().toLowerCase(),rr=rows0.filter(r=>!q||(r.name+r.phone+r.whatsapp).toLowerCase().includes(q));
- $("#chips").innerHTML=`${S.hr?`<span class="chip" style="color:${hrColor(S.hr)};border-color:${hrColor(S.hr)}" title="${T("إلغاء فلتر HR","Clear HR filter")}" data-a="${act(()=>{S.hr="";draw()})}">👤 ${esc(S.hr==="none"?T("بدون HR","No HR"):(hrById(S.hr)||{}).name)} ✕</span>`:""}<span class="chip ${S.status==="all"?"on":""}" data-a="${act(()=>{S.status="all";draw()})}">${T("الكل","All")} (${rr.length})</span>`+Object.keys(ST).map(k=>`<span class="chip ${S.status===k?"on":""}" data-a="${act(()=>{S.status=k;draw()})}">${stT(k)} (${rr.filter(r=>r.Status===k).length})</span>`).join("");
+ $("#chips").innerHTML=`${S.hr?`<span class="chip" style="color:${hrColor(S.hr)};border-color:${hrColor(S.hr)}" title="${T("إلغاء فلتر HR","Clear HR filter")}" data-a="${act(()=>{S.hr="";draw()})}">👤 ${esc(S.hr==="none"?T("بدون HR","No HR"):(hrById(S.hr)||{}).name)} ✕</span>`:""}<span class="chip ${S.status==="all"?"on":""}" data-a="${act(()=>{S.status="all";draw()})}">${T("الكل","All")} (${rr.length})</span>`+Object.keys(ST).map(k=>`<span class="chip ${S.status===k?"on":""}${k==="Rejected"?" rj":""}" data-a="${act(()=>{S.status=k;draw()})}">${stT(k)} (${rr.filter(r=>r.Status===k).length})</span>`).join("");
  const rows=listRows();
  if(RETABS.indexOf(S.tab)>=0)$("#ptitle").textContent=RETITLE[S.tab]+" | MC Men's Club"+T(" — أرشيف الطلبات"," — applications archive")+(S.branch?" | "+T("الفرع:","Branch:")+S.branch:"")+(S.pos?" | "+T("الوظيفة:","Position:")+S.pos:"");
  if(S.tab==="list"||RETABS.indexOf(S.tab)>=0){$("#list").classList.remove("hide");
@@ -789,7 +790,7 @@ function draw(){
 /* ---------- المراحل: 3 أوضاع عرض ---------- */
 const PVS=[["board","🗂️ اللوحة","🗂️ Board"],["timeline","⏳ الزمني","⏳ Timeline"],["matrix","🔥 خريطة الفروع","🔥 Branch heatmap"],["funnel","📊 قمع الفروع","📊 Branch funnel"],["byhr","👥 حسب الـ HR","👥 By HR"]];
 const dStage=r=>Math.max(0,days(r.StatusChangedAt||r.submittedAt));
-const sColor=k=>ORDER.includes(k)?FC[ORDER.indexOf(k)]:(k==="Hold"?"#e0b100":k==="No Show"?"#9b1119":"#9aa0a6");
+const sColor=k=>ORDER.includes(k)?FC[ORDER.indexOf(k)]:(k==="Hold"?"#e0b100":k==="No Show"?"#9b1119":k==="Rejected"?"#d71920":"#9aa0a6");
 function pipeMode(m){const p=$("#pipe");
  p.classList.toggle("cols",m==="board");
  p.classList.toggle("card",m!=="board");
@@ -823,7 +824,7 @@ function pipeMatrix(rows){
 function stageStack(g){
  const n=g.length;
  const seg=ORDER.map((k,i)=>{const c=g.filter(r=>r.Status===k).length;return c?`<u style="width:${c/n*100}%;background:${FC[i]}" title="${esc(stT(k))}: ${c}"></u>`:""}).join("");
- const pills=ORDER.map((k,i)=>{const c=g.filter(r=>r.Status===k).length;return c?`<span><i style="background:${FC[i]}"></i>${stT(k)} ${c}</span>`:""}).join("")+["Hold","No Show","Rejected"].map(k=>{const c=g.filter(r=>r.Status===k).length;return c?`<span style="background:#f3f3f3">${stT(k)} ${c}</span>`:""}).join("");
+ const pills=ORDER.map((k,i)=>{const c=g.filter(r=>r.Status===k).length;return c?`<span><i style="background:${FC[i]}"></i>${stT(k)} ${c}</span>`:""}).join("")+["Hold","No Show","Rejected"].map(k=>{const c=g.filter(r=>r.Status===k).length;return c?`<span style="background:${k==="Rejected"?"#fde8e8":"#f3f3f3"};color:${k==="Rejected"?"var(--red)":"inherit"}">${stT(k)} ${c}</span>`:""}).join("");
  return `<div class="pfc-sb">${n?seg:'<u style="width:100%;background:#eee"></u>'}</div><div class="pfc-p">${pills}</div>`}
 function pipeFunnel(rows){
  const brs=[...new Set(rows.map(r=>r.branch).filter(Boolean))];

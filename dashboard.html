@@ -269,7 +269,7 @@ th .mix,.thmix .mix{align-items:center;text-align:center}
   <div class="tabstrip noprint"><button class="btn" data-tab="dash" data-ar="الداش بورد" data-en="Dashboard">الداش بورد</button><button class="btn" data-tab="list" data-ar="الطلبات" data-en="Applications">الطلبات</button><button class="btn" data-tab="stores" data-ar="STORES" data-en="STORES">STORES</button><button class="btn" data-tab="hq" data-ar="HQ" data-en="HQ">HQ</button><button class="btn" data-tab="wearhouse" data-ar="WEARHOUSE" data-en="WEARHOUSE">WEARHOUSE</button><button class="btn" data-tab="pipe" data-ar="المراحل" data-en="Pipeline">المراحل</button><button class="btn" data-tab="prep" data-ar="فترة الاختيار" data-en="Preparation Period">فترة الاختيار</button><button class="btn" data-tab="set" data-ar="الإعدادات" data-en="Settings">الإعدادات</button></div>
  <div class="wrap">
   <div class="pr" id="ptitle"></div>
-  <div class="bar noprint"><span class="chip" data-p="1" data-ar="اليوم" data-en="Today">اليوم</span><span class="chip" data-p="7" data-ar="آخر 7 أيام" data-en="Last 7 days">آخر 7 أيام</span><span class="chip" data-p="30" data-ar="آخر 30 يوم" data-en="Last 30 days">آخر 30 يوم</span><span class="chip" data-p="0" data-ar="الكل" data-en="All">الكل</span>
+  <div class="bar noprint"><span class="chip" data-p="1" data-ar="اليوم" data-en="Today">اليوم</span><span class="chip" data-p="7" data-ar="الأسبوع الماضي" data-en="Last week">الأسبوع الماضي</span><span class="chip" data-p="30" data-ar="آخر 30 يوم" data-en="Last 30 days">آخر 30 يوم</span><span class="chip" data-p="0" data-ar="الكل" data-en="All">الكل</span>
    <span><span data-ar="من" data-en="From">من</span> <input type="date" id="df"></span><span><span data-ar="إلى" data-en="To">إلى</span> <input type="date" id="dtt"></span>
    <select id="basis"><option value="sub" data-ar="حسب تاريخ التقديم" data-en="By submission date">حسب تاريخ التقديم</option><option value="status" data-ar="حسب تاريخ تغيير الحالة" data-en="By status-change date">حسب تاريخ تغيير الحالة</option></select></div>
   <div class="bar noprint"><select id="fb"><option value="">كل الفروع</option></select><select id="fp"><option value="">كل الوظائف</option></select><input id="q" class="lo" data-ar-ph="ابحث بالاسم أو رقم الموبايل" data-en-ph="Search by name or mobile" placeholder="ابحث بالاسم أو رقم الموبايل" style="flex:1;min-width:200px"></div>
@@ -719,8 +719,11 @@ if(!DEMO)inboxReload();
 /* ---------- الفلاتر المشتركة ---------- */
 const dOf=r=>new Date(S.basis==="status"?(r.StatusChangedAt||r.submittedAt):r.submittedAt).getTime();
 const mid=d=>{d=new Date(d);d.setHours(0,0,0,0);return d};
+/* بداية الأسبوع السبت */
+const wkStart=d=>{const x=mid(d);x.setDate(x.getDate()-((x.getDay()+1)%7));return x};
 function range(){let s=0,e=Infinity;
  if(S.from||S.to){if(S.from)s=mid(S.from).getTime();if(S.to)e=mid(S.to).getTime()+864e5-1}
+ else if(S.period===7){const w=wkStart(Date.now());s=w.getTime();e=w.getTime()+7*864e5-1}
  else if(S.period)s=mid(Date.now()-(S.period-1)*864e5).getTime();
  return[s,e]}
 /* تابات الأرشيف: STORES = فروع ليها مدير منطقة، HQ / WEARHOUSE بالاسم */
@@ -734,7 +737,7 @@ const scopeRows=()=>{
 };
 const base=()=>{const[s,e]=range();return scopeRows().filter(r=>(!S.branch||r.branch===S.branch)&&(!S.pos||r.position===S.pos||r._eposition===S.pos)&&(!S.hr||(S.hr==="none"?!r._hr:r._hr===S.hr))&&dOf(r)>=s&&dOf(r)<=e)};
 const listRows=()=>{const q=S.q.trim().toLowerCase();return base().filter(r=>(S.status==="all"||r.Status===S.status)&&(!q||(r.name+r.phone+r.whatsapp).toLowerCase().includes(q)))};
-function periodLabel(){if(S.from||S.to)return T("من ","From ")+(S.from||T("البداية","start"))+T(" إلى "," to ")+(S.to||T("اليوم","today"));return T({1:"اليوم",7:"آخر 7 أيام",30:"آخر 30 يوم",0:"كل الفترات"}[S.period],{1:"Today",7:"Last 7 days",30:"Last 30 days",0:"All time"}[S.period])}
+function periodLabel(){if(S.from||S.to)return T("من ","From ")+(S.from||T("البداية","start"))+T(" إلى "," to ")+(S.to||T("اليوم","today"));return T({1:"اليوم",7:"الأسبوع الماضي",30:"آخر 30 يوم",0:"كل الفترات"}[S.period],{1:"Today",7:"Last week",30:"Last 30 days",0:"All time"}[S.period])}
 document.querySelectorAll("[data-p]").forEach(c=>c.onclick=()=>{S.period=+c.dataset.p;S.from=S.to="";draw()});
 $("#df").onchange=e=>{S.from=e.target.value;S.period=null;draw()};$("#dtt").onchange=e=>{S.to=e.target.value;S.period=null;draw()};
 $("#basis").onchange=e=>{S.basis=e.target.value;draw()};$("#fb").onchange=e=>{S.branch=e.target.value;draw()};$("#fp").onchange=e=>{S.pos=e.target.value;draw()};
@@ -1102,7 +1105,11 @@ function drawDash(){
  $("#fun").innerHTML=ORDER.map((k,i)=>{const c=rows.filter(r=>ORDER.indexOf(r.Status)>=i).length;REP.push([T("قمع التوظيف","Hiring funnel"),stT(k),c]);return `<div class="fn" data-a="${act(go({tab:"list",status:k}))}" style="width:${n?Math.max(28,c/n*100):28}%;background:${FC[i]}"><span>${stT(k)}</span><span>${c}${n?" ("+Math.round(c/n*100)+"%)":""}</span></div>`}).join("")+`<div style="margin-top:10px;font-size:13px;color:var(--mu);display:flex;gap:16px;flex-wrap:wrap">${["Hold","No Show","Rejected"].map(k=>`<span style="cursor:pointer" data-a="${act(go({tab:"list",status:k}))}">${stT(k)}: <b>${rows.filter(r=>r.Status===k).length}</b></span>`).join("")}</div>`;
  ["Hold","No Show","Rejected"].forEach(k=>REP.push([T("قمع التوظيف","Hiring funnel"),stT(k),rows.filter(r=>r.Status===k).length]));
  /* الزمن */
- const e=mid(S.to||Date.now());let s=S.from?mid(S.from):S.period?mid(e.getTime()-(S.period-1)*864e5):mid(Math.min(e.getTime(),...rows.map(r=>dOf(r)),e.getTime()));
+ let e=mid(S.to||Date.now()),s;
+ if(S.from)s=mid(S.from);
+ else if(S.period===7){s=wkStart(e);e=mid(s.getTime()+6*864e5)}
+ else if(S.period)s=mid(e.getTime()-(S.period-1)*864e5);
+ else s=mid(Math.min(e.getTime(),...rows.map(r=>dOf(r)),e.getTime()));
  if(s>e)s=e;if((e-s)/864e5>400)s=mid(e.getTime()-399*864e5);const N=Math.round((e-s)/864e5)+1,step=N>62?7:1,bk=[];for(let t=s.getTime();t<=e.getTime();t+=step*864e5)bk.push(t);
  const per=bk.map(t=>rows.filter(r=>dOf(r)>=t&&dOf(r)<t+step*864e5).length),mx=Math.max(1,...per);
  $("#tl").innerHTML=per.map(c=>`<div style="height:${c/mx*100}%" title="${c}"></div>`).join("");
